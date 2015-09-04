@@ -21,7 +21,7 @@ var s=0;
 var a1=0,a2=0;
 var wallspace = 200;
 var l;
-var lives = [], life, no_lives=3, key1=key2=10;
+var lives = [], life, no_lives=3;
 
 
 function line(width, height, color) {
@@ -103,41 +103,37 @@ function check_collision()
 	 	for(i=0;i<obstacles_above.length;i++)
 	 	{
 
-	 if(key1==10&&player.x+radius>=obstacles_above[i].x&&player.y+radius>=obstacles_above[i].y&&player.x-radius<=obstacles_above[i].x+obstacles_above[i].width)
+	 if(player.x+radius>=obstacles_above[i].x&&player.y+radius>=obstacles_above[i].y&&player.x-radius<=obstacles_above[i].x+obstacles_above[i].width)
 		{
 			dist=calculate_distance(player, obstacles_above[i]);
 			if(dist<=radius) {
 				no_lives--;
-				alert("You lost a life! :(");
-				key1 = i;
+				alert("You lost a life! frown emoticon");
+					obstacles_above=[];
+					obstacles_below=[];
 			}
 			no_lives--;
-			alert("You lost a life! :(");
-			key1 = i;
-		}
-
-		if(key1<10&&player.x>obstacles_above[key1].x+obstacles_above[key1].width+radius) {
-			key1=10;
+			alert("You lost a life! frown emoticon");
+				obstacles_above=[];
+				obstacles_below=[];
 		}
 	}
 		
 		for(ji=0;ji<obstacles_below.length;ji++)
 		{
-		if(key2==10&&player1.x-radius<=obstacles_below[ji].x+obstacles_below[ji].width&&player1.y+radius>=obstacles_below[ji].y&&player1.x+radius>=obstacles_below[ji].x)
+		if(player1.x-radius<=obstacles_below[ji].x+obstacles_below[ji].width&&player1.y+radius>=obstacles_below[ji].y&&player1.x+radius>=obstacles_below[ji].x)
 		{
 			dist=calculate_distance(player1, obstacles_below[ji]);
 			if(dist<=radius) {
 				no_lives--;
-				alert("You lost a life! :(");
-				key2 = ji;
+				alert("You lost a life! frown emoticon");
+				obstacles_below=[];
+				obstacles_above=[];
 			}
 			no_lives--;
-			alert("You lost a life! :(");
-			key2 = ji;
-		}
-
-		if(key2<10&&player1.x+radius<obstacles_below[key2].x) {
-			key2=10;
+			alert("You lost a life! frown emoticon");
+			obstacles_below=[];
+			obstacles_above=[];
 		}
 	}
 }
@@ -305,6 +301,7 @@ function draw_lives() {
 function check_no_lives() {
 	if(no_lives==0) {
 		GAME_OVER = 1;
+		try_again();
 	}
 }
 
@@ -336,9 +333,9 @@ setAnimation = requestAnimationFrame(function()
 				alert("You win!");
 			}
 	}
-	else
+	//else
 		//open page saying game over and give a button saying try again
-	try_again();
+	//try_again();
  });
 
 
@@ -375,7 +372,9 @@ function try_again()
 	divtag.style.position = "absolute";
 	divtag.style.left = "0px";
 	divtag.style.top = "0px";
-	divtag.innerHTML = "Sorry! You lost! Better luck next time :P";
+	divtag.style.fontSize = "40px";
+	divtag.style.color = "white";
+	divtag.align = "center";
+	divtag.innerHTML = "Sorry! You lost! Better luck next time tongue emoticon";
 	document.body.appendChild(divtag);
-
 }
