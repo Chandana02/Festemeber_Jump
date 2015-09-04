@@ -108,14 +108,14 @@ function check_collision()
 			dist=calculate_distance(player, obstacles_above[i]);
 			if(dist<=radius) {
 				no_lives--;
-				alert("You lost a life! frown emoticon");
-					obstacles_above=[];
-					obstacles_below=[];
-			}
-			no_lives--;
-			alert("You lost a life! frown emoticon");
 				obstacles_above=[];
 				obstacles_below=[];
+				alert("You lost a life! :(");
+			}
+			no_lives--;
+			obstacles_above=[];
+			obstacles_below=[];
+			alert("You lost a life! :(");
 		}
 	}
 		
@@ -126,14 +126,15 @@ function check_collision()
 			dist=calculate_distance(player1, obstacles_below[ji]);
 			if(dist<=radius) {
 				no_lives--;
-				alert("You lost a life! frown emoticon");
 				obstacles_below=[];
 				obstacles_above=[];
+				alert("You lost a life! :(");
+				
 			}
 			no_lives--;
-			alert("You lost a life! frown emoticon");
 			obstacles_below=[];
 			obstacles_above=[];
+			alert("You lost a life! :(");
 		}
 	}
 }
@@ -375,6 +376,6 @@ function try_again()
 	divtag.style.fontSize = "40px";
 	divtag.style.color = "white";
 	divtag.align = "center";
-	divtag.innerHTML = "Sorry! You lost! Better luck next time tongue emoticon";
+	divtag.innerHTML = "Sorry! You lost! Better luck next time :P";
 	document.body.appendChild(divtag);
 }
