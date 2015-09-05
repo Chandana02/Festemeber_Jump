@@ -19,7 +19,7 @@ var setAnimation;
 var GAME_OVER = 0;
 var s=0;
 var a1=0,a2=0;
-var wallspace = 200;
+var wallspace = window.innerWidth/8;
 var l;
 var lives = [], life, no_lives=3;
 var BUFFER_OBSTACLE_SPACE = 300;
@@ -325,12 +325,12 @@ setAnimation = requestAnimationFrame(function()
 			if(player.JUMP_ACTIVATE!=0)
 			{
 				player.jump();
-				player.x+=0.4;
+				player.x+=(window.innerWidth/10000)*3;
 			}
 			if(player1.JUMP_ACTIVATE!=0)
 			{
 				player1.jump();
-				player1.x-=0.4;
+				player1.x-=(window.innerWidth/10000)*3;
 			}
 			if(player.x>=player1.x) {
 				GAME_OVER = 1;
