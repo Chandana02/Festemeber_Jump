@@ -22,6 +22,7 @@ var a1=0,a2=0;
 var wallspace = 200;
 var l;
 var lives = [], life, no_lives=3;
+var BUFFER_OBSTACLE_SPACE = 300;
 
 
 function line(width, height, color) {
@@ -103,39 +104,40 @@ function check_collision()
 	 	for(i=0;i<obstacles_above.length;i++)
 	 	{
 
-	 if(player.x+radius>=obstacles_above[i].x&&player.y+radius>=obstacles_above[i].y&&player.x-radius<=obstacles_above[i].x+obstacles_above[i].width)
-		{
-			dist=calculate_distance(player, obstacles_above[i]);
-			if(dist<=radius) {
+		 if(player.x+radius>=obstacles_above[i].x&&player.y+radius>=obstacles_above[i].y&&player.x-radius<=obstacles_above[i].x+obstacles_above[i].width)
+			{
+				dist=calculate_distance(player, obstacles_above[i]);
+				if(dist<=radius) {
+					no_lives--;
+					obstacles_above=[];
+					obstacles_below=[];
+					alert("You lost a life! :(");
+					break;
+				}
 				no_lives--;
 				obstacles_above=[];
 				obstacles_below=[];
 				alert("You lost a life! :(");
 			}
-			no_lives--;
-			obstacles_above=[];
-			obstacles_below=[];
-			alert("You lost a life! :(");
-		}
 	}
 		
 		for(ji=0;ji<obstacles_below.length;ji++)
 		{
-		if(player1.x-radius<=obstacles_below[ji].x+obstacles_below[ji].width&&player1.y+radius>=obstacles_below[ji].y&&player1.x+radius>=obstacles_below[ji].x)
-		{
-			dist=calculate_distance(player1, obstacles_below[ji]);
-			if(dist<=radius) {
+			if(player1.x-radius<=obstacles_below[ji].x+obstacles_below[ji].width&&player1.y+radius>=obstacles_below[ji].y&&player1.x+radius>=obstacles_below[ji].x)
+			{
+				dist=calculate_distance(player1, obstacles_below[ji]);
+				if(dist<=radius) {
+					no_lives--;
+					obstacles_below=[];
+					obstacles_above=[];
+					alert("You lost a life! :(");
+					break;
+				}
 				no_lives--;
 				obstacles_below=[];
 				obstacles_above=[];
 				alert("You lost a life! :(");
-				
 			}
-			no_lives--;
-			obstacles_below=[];
-			obstacles_above=[];
-			alert("You lost a life! :(");
-		}
 	}
 }
 
@@ -173,7 +175,6 @@ var m,n;
 
 function make_obstacle()
 {
-	var BUFFER_OBSTACLE_SPACE = 250;
 	m = Math.floor((Math.random() * 20) + 1);
     n = Math.floor((Math.random() * 20) + 1);
     if(t==20)
@@ -183,6 +184,7 @@ function make_obstacle()
        	var last_obstacle = obstacles_below[ obstacles_below.length-1 ];
        	if(!last_obstacle ||last_obstacle.x >= wallspace+BUFFER_OBSTACLE_SPACE ) 
        	{
+       		BUFFER_OBSTACLE_SPACE-=4;
 	       	k1=Math.floor(Math.random()*10);
 	       	obstacle = new create_obstacle(wallspace+10,y_coordinates[k1],heights[k1],widths[k1]);
 	       	obstacles_below.push(obstacle);
@@ -195,6 +197,7 @@ function make_obstacle()
 		var last_obstacle = obstacles_above[ obstacles_above.length-1 ];
 		if(!last_obstacle || cw - (last_obstacle.x + last_obstacle.width) >= wallspace+BUFFER_OBSTACLE_SPACE ) 
 		{
+			BUFFER_OBSTACLE_SPACE-=4;
 			k=Math.floor(Math.random()*10);
 			obstacle1 = new create_obstacle((cw-10-wallspace),y_coordinates[k]-ch/2,heights[k],widths[k]);
 			obstacles_above.push(obstacle1);
