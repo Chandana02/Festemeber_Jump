@@ -313,13 +313,13 @@ function draw_lives() {
 function check_no_lives() {
 	if(no_lives==0) {
 		GAME_OVER = 1;
-		try_again();
+		try_again("Sorry! You lost! Better luck next time :P" + "<br> <button id=\"but\">Try again</button>");
 	}
 }
 
 draw_player();
 
-function try_again()
+function try_again(str)
 {
 	divtag=document.createElement('div');
 	divtag.style.height=window.innerHeight;
@@ -332,9 +332,12 @@ function try_again()
 	divtag.style.fontSize = "100px";
 	divtag.style.color = "white";
 	divtag.align = "center";
-	divtag.innerHTML = "Sorry! You lost! Better luck next time :P" + "<br> <button id=\"but\">Try again</button>";
+	divtag.innerHTML = str;
 	document.body.appendChild(divtag);
 	but = document.getElementById("but");
+	//but.style.backgroundColor = "black";
+	//but.style.width = "150px";
+	//but.style.height = "50px";
 	but.onclick = function() {location.reload();}
 }
 
@@ -361,7 +364,7 @@ setAnimation = requestAnimationFrame(function()
 			}
 			if(player.x>=player1.x) {
 				GAME_OVER = 1;
-				alert("You win!");
+				try_again("You win! Wanna play again? <br> <button id=\"play\">Play again</button>");
 			}
 	}
  });
