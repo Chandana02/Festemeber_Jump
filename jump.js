@@ -21,7 +21,7 @@ var s=0;
 var a1=0,a2=0;
 var wallspace = window.innerWidth/8;
 var l;
-var lives = [], life, no_lives=3;
+var lives = [], life, no_lives=3, life_loss = 0;
 var BUFFER_OBSTACLE_SPACE = 300;
 
 
@@ -111,13 +111,17 @@ function check_collision()
 					no_lives--;
 					obstacles_above=[];
 					obstacles_below=[];
-					alert("You lost a life! :(");
+					//lose_life();
+					//life_loss = 1;
+					//GAME_OVER=0;
 					break;
 				}
 				no_lives--;
 				obstacles_above=[];
 				obstacles_below=[];
-				alert("You lost a life! :(");
+				//lose_life();
+				//life_loss = 1;
+				//GAME_OVER=0;
 			}
 	}
 		
@@ -130,13 +134,17 @@ function check_collision()
 					no_lives--;
 					obstacles_below=[];
 					obstacles_above=[];
-					alert("You lost a life! :(");
+					//lose_life();
+					//life_loss = 1;
+					//GAME_OVER=0;
 					break;
 				}
 				no_lives--;
 				obstacles_below=[];
 				obstacles_above=[];
-				alert("You lost a life! :(");
+				//lose_life();
+				//life_loss = 1;
+				//GAME_OVER=0;
 			}
 	}
 }
@@ -311,6 +319,25 @@ function check_no_lives() {
 
 draw_player();
 
+function try_again()
+{
+	divtag=document.createElement('div');
+	divtag.style.height=window.innerHeight;
+	divtag.style.width=window.innerWidth;
+	divtag.style.backgroundColor="black";
+	divtag.style.opacity="0.8";
+	divtag.style.position = "absolute";
+	divtag.style.left = "0px";
+	divtag.style.top = "0px";
+	divtag.style.fontSize = "100px";
+	divtag.style.color = "white";
+	divtag.align = "center";
+	divtag.innerHTML = "Sorry! You lost! Better luck next time :P" + "<br> <button id=\"but\">Try again</button>";
+	document.body.appendChild(divtag);
+	but = document.getElementById("but");
+	but.onclick = function() {location.reload();}
+}
+
 setAnimation = requestAnimationFrame(function()
  {
 	if(GAME_OVER!=1&&no_lives!=0) {
@@ -337,9 +364,6 @@ setAnimation = requestAnimationFrame(function()
 				alert("You win!");
 			}
 	}
-	//else
-		//open page saying game over and give a button saying try again
-	//try_again();
  });
 
 
@@ -364,21 +388,4 @@ window.onkeydown = function(event)
 			player1.v=4;
 		}
 	}
-}
-
-function try_again()
-{
-	divtag=document.createElement('div');
-	divtag.style.height=window.innerHeight;
-	divtag.style.width=window.innerWidth;
-	divtag.style.backgroundColor="black";
-	divtag.style.opacity="0.8";
-	divtag.style.position = "absolute";
-	divtag.style.left = "0px";
-	divtag.style.top = "0px";
-	divtag.style.fontSize = "40px";
-	divtag.style.color = "white";
-	divtag.align = "center";
-	divtag.innerHTML = "Sorry! You lost! Better luck next time :P";
-	document.body.appendChild(divtag);
 }
