@@ -321,6 +321,7 @@ function check_no_lives() {
 	if(no_lives==0) {
 		GAME_OVER = 1;
 		try_again("Sorry! You lost! Better luck next time :P" + "<br><br> <button id=\"but\">Try again</button>", "but");
+
 	}
 }
 
@@ -374,6 +375,7 @@ setAnimation = requestAnimationFrame(function()
 			if(player.x>=player1.x) {
 				GAME_OVER = 1;
 				try_again("You win! Wanna play again? <br><br> <button id=\"play\">Play again</button>", "play");
+
 			}
 	}
  });
