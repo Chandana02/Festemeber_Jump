@@ -313,13 +313,13 @@ function draw_lives() {
 function check_no_lives() {
 	if(no_lives==0) {
 		GAME_OVER = 1;
-		try_again("Sorry! You lost! Better luck next time :P" + "<br> <button id=\"but\">Try again</button>");
+		try_again("Sorry! You lost! Better luck next time :P" + "<br> <button id=\"but\">Try again</button>", "but");
 	}
 }
 
 draw_player();
 
-function try_again(str)
+function try_again(str, id)
 {
 	divtag=document.createElement('div');
 	divtag.style.height=window.innerHeight;
@@ -334,10 +334,12 @@ function try_again(str)
 	divtag.align = "center";
 	divtag.innerHTML = str;
 	document.body.appendChild(divtag);
-	but = document.getElementById("but");
-	//but.style.backgroundColor = "black";
-	//but.style.width = "150px";
-	//but.style.height = "50px";
+	but = document.getElementById(id);
+	but.style.backgroundColor = "black";
+	but.style.width = "150px";
+	but.style.height = "50px";
+	but.style.fontSize = "30px";
+	but.style.color = "white";  
 	but.onclick = function() {location.reload();}
 }
 
@@ -364,7 +366,7 @@ setAnimation = requestAnimationFrame(function()
 			}
 			if(player.x>=player1.x) {
 				GAME_OVER = 1;
-				try_again("You win! Wanna play again? <br> <button id=\"play\">Play again</button>");
+				try_again("You win! Wanna play again? <br> <button id=\"play\">Play again</button>", "play");
 			}
 	}
  });
