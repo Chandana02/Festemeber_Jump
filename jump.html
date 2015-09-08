@@ -4,7 +4,16 @@
 <style type="text/css"></style>
 </head>
 <body style="margin:0px;">
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.4&appId=1526426050946140";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
 <canvas id="screen"></canvas>
+<div class="fb-like" data-href="https://www.facebook.com/festember?fref=ts" data-layout="standard" data-action="like" data-show-faces="true" data-share="true" style="position:absolute;left:0px;top:50px;z-index:999;"></div>
 <script type="text/javascript" language="javascript" src="jump.js"></script>
 </body>
 </html>
