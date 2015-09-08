@@ -45,7 +45,7 @@ function create_player(x,y,color,ini)
 	this.initial = ini;
 	this.JUMP_ACTIVATE = 0;
 	this.t=0;
-	this.v=4;
+	this.v=6;
 }
 
 function create_lives(x, y) {
@@ -57,19 +57,19 @@ create_player.prototype.jump = function()
 {
 	
 	jump_sound.play();
-	if(this.t==120)
+	if(this.t==100)
 	{
 		this.t=0;
 	}
-	else if(this.t>=30)	
+	else if(this.t>=25)	
 	{
 		
 		this.y+=this.v;
-		this.v+=0.03;
+		this.v+=0.04;
 	}
 	else 
 	{
-		this.v-=0.09;
+		this.v-=0.12;
 		this.y-=this.v;
 	}
 	if(this.y>=this.initial)
@@ -244,7 +244,7 @@ function make_obstacle()
 			s=1;
 		}
 		obstacle=obstacles_above[i];
-		obstacle.x-=2;
+		obstacle.x-=4;
 		draw_obstacle(obstacle);
 		i++;
 	}
@@ -267,7 +267,7 @@ function make_obstacle()
 			s=1;
 		}
 		obstacle=obstacles_below[i];
-		obstacle.x+=2;
+		obstacle.x+=4;
 		draw_obstacle(obstacle);
 		i++;
 	}
@@ -388,7 +388,7 @@ window.onkeydown = function(event)
 	{
 		if(player.y==player.initial)
 		{
-			player.v=4;
+			player.v=6;
 			player.JUMP_ACTIVATE = 1;
 			player.t=0;
 		}
@@ -399,7 +399,7 @@ window.onkeydown = function(event)
 		{
 			player1.JUMP_ACTIVATE = 1;
 			player1.t=0;
-			player1.v=4;
+			player1.v=6;
 		}
 	}
 }
