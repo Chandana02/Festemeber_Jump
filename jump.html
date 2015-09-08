@@ -4,9 +4,14 @@
 <style type="text/css">
 	#canvas-wrap { position:relative } /* Make this a positioned parent */
 	#overlay     { position:absolute; top:5px; left:10px; }
-	iframe {
+	#one {
     position: absolute;
     top: 30px;
+    left:10px;
+	}
+	#two {
+    position: absolute;
+    top: 60px;
     left:10px;
 	}
 </style>
@@ -15,10 +20,11 @@
 <div id="canvas-wrap">
 <canvas id="screen"></canvas>
 <div id="overlay"><a href='https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Ffestember.com' title='Facebook' target='_BLANK'><img src='images/facebookshare.jpeg' width="70" height="20"></a></div>
-<iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Ffacebook.com%2Ffestember?fref=ts&layout=button_count&show_faces=false&width=90&action=like&colorscheme=light"
-scrolling="no" frameborder="0" allowTransparency="true"
+<iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Ffacebook.com%2Ffestember?fref=ts&layout=button_count&show_faces=false&width=90&action=like&colorscheme=light" scrolling="no" frameborder="0" allowTransparency="true"
 style="border:none; overflow:hidden; width:90px;
 height:20px"></iframe>
+
+<!--<iframe id="two" src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fogp.me%2F&send=false&layout=standard&width=90&show_faces=true&action=like&colorscheme=light&height=80&appId=115190258555800" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:80px;" allowTransparency="true"></iframe> -->
 
 </div>
 <script type="text/javascript" language="javascript" src="jump.js"></script>
