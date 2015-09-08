@@ -23,6 +23,8 @@ var wallspace = window.innerWidth/8;
 var l;
 var lives = [], life, no_lives=3, life_loss = 0;
 var BUFFER_OBSTACLE_SPACE = 300;
+var jump_sound = new Audio("jump.wav");
+var collision_sound = new Audio("collision2.wav");
 
 
 function line(width, height, color) {
@@ -54,8 +56,8 @@ function create_lives(x, y) {
 create_player.prototype.jump = function()
 {
 	
-
-	if(this.t==60)
+	jump_sound.play();
+	if(this.t==120)
 	{
 		this.t=0;
 	}
@@ -63,7 +65,7 @@ create_player.prototype.jump = function()
 	{
 		
 		this.y+=this.v;
-		this.v+=0.09;
+		this.v+=0.03;
 	}
 	else 
 	{
@@ -73,6 +75,7 @@ create_player.prototype.jump = function()
 	if(this.y>=this.initial)
 	{
 		this.JUMP_ACTIVATE = 0;
+		this.y=this.initial
 	}
 	this.t++;
 	
@@ -111,6 +114,7 @@ function check_collision()
 					no_lives--;
 					obstacles_above=[];
 					obstacles_below=[];
+					collision_sound.play();
 					//lose_life();
 					//life_loss = 1;
 					//GAME_OVER=0;
@@ -119,6 +123,7 @@ function check_collision()
 				no_lives--;
 				obstacles_above=[];
 				obstacles_below=[];
+				collision_sound.play();
 				//lose_life();
 				//life_loss = 1;
 				//GAME_OVER=0;
@@ -134,6 +139,7 @@ function check_collision()
 					no_lives--;
 					obstacles_below=[];
 					obstacles_above=[];
+					collision_sound.play();
 					//lose_life();
 					//life_loss = 1;
 					//GAME_OVER=0;
@@ -142,6 +148,7 @@ function check_collision()
 				no_lives--;
 				obstacles_below=[];
 				obstacles_above=[];
+				collision_sound.play();
 				//lose_life();
 				//life_loss = 1;
 				//GAME_OVER=0;
@@ -313,7 +320,7 @@ function draw_lives() {
 function check_no_lives() {
 	if(no_lives==0) {
 		GAME_OVER = 1;
-		try_again("Sorry! You lost! Better luck next time :P" + "<br> <button id=\"but\">Try again</button>", "but");
+		try_again("Sorry! You lost! Better luck next time :P" + "<br><br> <button id=\"but\">Try again</button>", "but");
 	}
 }
 
@@ -366,7 +373,7 @@ setAnimation = requestAnimationFrame(function()
 			}
 			if(player.x>=player1.x) {
 				GAME_OVER = 1;
-				try_again("You win! Wanna play again? <br> <button id=\"play\">Play again</button>", "play");
+				try_again("You win! Wanna play again? <br><br> <button id=\"play\">Play again</button>", "play");
 			}
 	}
  });
