@@ -1,3 +1,5 @@
+(function(){
+
 var canvas = document.getElementById("screen");
 canvas.height = window.innerHeight;
 canvas.width = window.innerWidth;
@@ -23,8 +25,8 @@ var wallspace = window.innerWidth/8;
 var l;
 var lives = [], life, no_lives=3, life_loss = 0;
 var BUFFER_OBSTACLE_SPACE = 300;
-var jump_sound = new Audio("jump.wav");
-var collision_sound = new Audio("collision2.wav");
+var jump_sound = new Audio("sounds/CanonShoot.wav");
+var collision_sound = new Audio("sounds/explosion.wav");
 
 
 function line(width, height, color) {
@@ -55,15 +57,14 @@ function create_lives(x, y) {
 
 create_player.prototype.jump = function()
 {
-	
-	jump_sound.play();
+	if(this.t==0)
+		jump_sound.play();
 	if(this.t==100)
 	{
 		this.t=0;
 	}
 	else if(this.t>=25)	
 	{
-		
 		this.y+=this.v;
 		this.v+=0.04;
 	}
@@ -115,18 +116,12 @@ function check_collision()
 					obstacles_above=[];
 					obstacles_below=[];
 					collision_sound.play();
-					//lose_life();
-					//life_loss = 1;
-					//GAME_OVER=0;
 					break;
 				}
 				no_lives--;
 				obstacles_above=[];
 				obstacles_below=[];
 				collision_sound.play();
-				//lose_life();
-				//life_loss = 1;
-				//GAME_OVER=0;
 			}
 	}
 		
@@ -244,7 +239,7 @@ function make_obstacle()
 			s=1;
 		}
 		obstacle=obstacles_above[i];
-		obstacle.x-=4;
+		obstacle.x-=3;
 		draw_obstacle(obstacle);
 		i++;
 	}
@@ -267,7 +262,7 @@ function make_obstacle()
 			s=1;
 		}
 		obstacle=obstacles_below[i];
-		obstacle.x+=4;
+		obstacle.x+=3;
 		draw_obstacle(obstacle);
 		i++;
 	}
@@ -339,6 +334,7 @@ function try_again(str, id)
 	divtag.style.top = "0px";
 	divtag.style.fontSize = "100px";
 	divtag.style.color = "white";
+	divtag.style.fontFamily = "Comic Sans MS";
 	divtag.align = "center";
 	divtag.innerHTML = str;
 	document.body.appendChild(divtag);
@@ -348,6 +344,7 @@ function try_again(str, id)
 	but.style.height = "50px";
 	but.style.fontSize = "30px";
 	but.style.color = "white";  
+	but.style.fontFamily = "Comic Sans MS";
 	but.onclick = function() {location.reload();}
 }
 
@@ -403,3 +400,4 @@ window.onkeydown = function(event)
 		}
 	}
 }
+})();
