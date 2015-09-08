@@ -1,19 +1,26 @@
 <html>
 <head>
 <title>Game 1</title>
-<style type="text/css"></style>
+<style type="text/css">
+	#canvas-wrap { position:relative } /* Make this a positioned parent */
+	#overlay     { position:absolute; top:5px; left:10px; }
+	iframe {
+    position: absolute;
+    top: 30px;
+    left:10px;
+	}
+</style>
 </head>
 <body style="margin:0px;">
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.4&appId=1526426050946140";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
+<div id="canvas-wrap">
 <canvas id="screen"></canvas>
-<div class="fb-like" data-href="https://www.facebook.com/festember?fref=ts" data-layout="standard" data-action="like" data-show-faces="true" data-share="true" style="position:absolute;left:0px;top:50px;z-index:999;"></div>
+<div id="overlay"><a href='https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Ffestember.com' title='Facebook' target='_BLANK'><img src='facebookshare.jpeg' width="70" height="20"></a></div>
+<iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Ffacebook.com%2Ffestember?fref=ts&layout=button_count&show_faces=false&width=90&action=like&colorscheme=light"
+scrolling="no" frameborder="0" allowTransparency="true"
+style="border:none; overflow:hidden; width:90px;
+height:20px"></iframe>
+
+</div>
 <script type="text/javascript" language="javascript" src="jump.js"></script>
 </body>
 </html>
