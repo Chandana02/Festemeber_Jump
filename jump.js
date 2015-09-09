@@ -27,6 +27,7 @@ var lives = [], life, no_lives=3, life_loss = 0;
 var BUFFER_OBSTACLE_SPACE = 300;
 var jump_sound = new Audio("sounds/CanonShoot.wav");
 var collision_sound = new Audio("sounds/explosion.wav");
+var bg_sound = new Audio("sounds/bg.wav");
 
 
 function line(width, height, color) {
@@ -352,7 +353,7 @@ setAnimation = requestAnimationFrame(function()
  {
 	if(GAME_OVER!=1&&no_lives!=0) {
 			requestAnimationFrame(arguments.callee);
-			
+			bg_sound.play();
 			make_obstacle();
 			check_collision();
 			write_score();
