@@ -1,4 +1,4 @@
-(function(){
+// (function(){
 
 var canvas = document.getElementById("screen");
 canvas.height = window.innerHeight;
@@ -7,11 +7,11 @@ var ctx = canvas.getContext('2d');
 
 var obstacles_above=[];
 var obstacles_below=[];
-var widths=[20,30,25,20,30,25,45,15,65,45];
-var heights=[35,35,40,30,40,40,20,55,10,45];
+var widths=[72,36,36,32];
+var heights=[33,67,67,80];
 var ch=window.innerHeight;
 var cw=window.innerWidth;
-var y_coordinates=[ch-35,ch-35,ch-40,ch-30,ch-40,ch-40,ch-20,ch-55,ch-10,ch-45];
+var y_coordinates=[ch-33,ch-67,ch-67,ch-80];
 var radius = 10;
 var player;
 var player1;
@@ -28,7 +28,18 @@ var BUFFER_OBSTACLE_SPACE = 300;
 var jump_sound = new Audio("sounds/CanonShoot.wav");
 var collision_sound = new Audio("sounds/explosion.wav");
 var bg_sound = new Audio("sounds/bg.wav");
+var obstacles = [];
+var png = ["car-02_72x33.png", "postbox1_36x67.png", "postbox2_36x67.png", "signboard32x80.png"];
+var pw = 945; //pavementWidth
+var ph = 33;  //pavementHeight
+for(u=0;u<4;u++)
+{
+	obstacles[u] = new Image();
+	obstacles[u].src = png[u];
+}
 
+var pave = new Image();
+pave.src = "slab945x33.png";
 
 function line(width, height, color) {
 	this.width = width;
@@ -49,6 +60,183 @@ function create_player(x,y,color,ini)
 	this.JUMP_ACTIVATE = 0;
 	this.t=0;
 	this.v=6;
+}
+
+function create_pavement(options)
+{
+	var pav = {};
+			
+			pav.context = options.context;
+			pav.width = options.width;
+			pav.height = options.height;
+			pav.image = options.image;
+			pav.x = options.x;
+			pav.y = options.y;
+		
+			pav.render = function () 
+			{
+			  	pav.context.drawImage(
+			    pav.image,											//img source
+			    0,													//sx
+			    0,													//sy
+			    pav.width,											//sw
+			    pav.height,											//sh
+			    pav.x,												//wx
+			    pav.y,												//wy
+			    pav.width,											//ww
+			    pav.height);											//wh
+			};
+		
+		return pav;
+}
+
+pavement = create_pavement({
+			context: canvas.getContext("2d"),
+			width: pw,
+			height: ph,
+			image:	pave,
+			x: wallspace,
+			y: ch/2-ph
+			});
+
+pavement1 = create_pavement({
+			context: canvas.getContext("2d"),
+			width: pw,
+			height: ph,
+			image:	pave,
+			x: wallspace,
+			y: ch-ph
+			});
+
+function create_obstacle(options)
+{
+	var ob = {};
+			
+			ob.context = options.context;
+			ob.width = options.width;
+			ob.height = options.height;
+			ob.image = options.image;
+			ob.x = options.x;
+			ob.y = options.y;
+		
+			ob.render = function () 
+			{
+			  	ob.context.drawImage(
+			    ob.image,											//img source
+			    0,													//sx
+			    0,													//sy
+			    ob.width,											//sw
+			    ob.height,											//sh
+			    ob.x,												//wx
+			    ob.y,												//wy
+			    ob.width,											//ww
+			    ob.height);											//wh
+			};
+		
+		return ob;
+}
+
+var t=0;
+var m,n;
+
+function make_obstacle()
+{
+	m = Math.floor((Math.random() * 20) + 1);
+    n = Math.floor((Math.random() * 20) + 1);
+    if(t==20)
+     	t=0;
+    if(t==m) 
+    {
+       	var last_obstacle = obstacles_below[ obstacles_below.length-1 ];
+       	if(!last_obstacle ||last_obstacle.x >= wallspace+BUFFER_OBSTACLE_SPACE ) 
+       	{
+       		BUFFER_OBSTACLE_SPACE-=4;
+	       	k1=Math.floor(Math.random()*4);
+	       	obstacle = create_obstacle({
+			context: canvas.getContext("2d"),
+			width: widths[k1],
+			height: heights[k1],
+			image:	obstacles[k1],
+			x: wallspace,
+			y: y_coordinates[k1]-ph
+			});
+	       	obstacles_below.push(obstacle);
+       	}
+
+	}
+
+	if(t==n)
+	{
+		var last_obstacle = obstacles_above[ obstacles_above.length-1 ];
+		if(!last_obstacle || cw - (last_obstacle.x + last_obstacle.width) >= wallspace+BUFFER_OBSTACLE_SPACE ) 
+		{
+			BUFFER_OBSTACLE_SPACE-=4;
+			k=Math.floor(Math.random()*4);
+			obstacle1 = create_obstacle({
+			context: canvas.getContext("2d"),
+			width: widths[k],
+			height: heights[k],
+			image:	obstacles[k],
+			x: cw-widths[k]-wallspace,
+			y: y_coordinates[k]-ch/2-ph
+			});
+			obstacles_above.push(obstacle1);
+		}
+	}
+	
+	i=0;
+	ctx.clearRect(0,0,cw,ch);
+	ctx.fillStyle="black";
+	ctx.fillRect(0, 0, wallspace, ch);
+	ctx.fillRect(cw-wallspace, 0, wallspace, ch);
+	draw_player();
+	
+		
+		
+	while(i<obstacles_above.length)
+	{
+		if(obstacles_above[0].x<=wallspace)
+		{
+			obstacles_above.shift();
+			a1--;
+			s=0;
+		}
+		
+		if(obstacles_above[0].x+obstacles_above[0].width<=player.x-radius&&s==0) 
+		{
+			score++;
+			a1++;
+			s=1;
+		}
+		obstacle=obstacles_above[i];
+		obstacle.x-=3;
+		obstacle.render();;
+		i++;
+	}
+
+	i=0;
+	
+	while(i<obstacles_below.length)
+	{
+		if(obstacles_below[0].x+obstacles_below[0].width>=cw-wallspace)
+		{
+			obstacles_below.shift();
+			a2--;
+			s=0;
+		}
+
+		if(obstacles_below[0].x>=player1.x+radius&&s==0)
+		{
+			score++;
+			a2++;
+			s=1;
+		}
+		obstacle=obstacles_below[i];
+		obstacle.x+=3;
+		obstacle.render();
+		i++;
+	}
+	t++;
 }
 
 function create_lives(x, y) {
@@ -136,32 +324,18 @@ function check_collision()
 					obstacles_below=[];
 					obstacles_above=[];
 					collision_sound.play();
-					//lose_life();
-					//life_loss = 1;
-					//GAME_OVER=0;
 					break;
 				}
 				no_lives--;
 				obstacles_below=[];
 				obstacles_above=[];
 				collision_sound.play();
-				//lose_life();
-				//life_loss = 1;
-				//GAME_OVER=0;
 			}
 	}
 }
 
-function create_obstacle(x,y,height,width)
-{
-	this.x=x;
-	this.y=y;
-	this.height=height;
-	this.width=width;
-}
-
-player = new create_player(wallspace+20+radius,ch/2-radius,'yellow',ch/2-radius);
-player1 = new create_player(cw-wallspace-radius-20,ch-radius,'red',ch-radius);
+player = new create_player(wallspace+20+radius,ch/2-radius-ph,'yellow',ch/2-radius-ph);
+player1 = new create_player(cw-wallspace-radius-20,ch-radius-ph,'red',ch-radius-ph);
 
 function draw_player()
 {
@@ -175,106 +349,8 @@ function draw_player()
 	ctx.arc(player1.x, player1.y, radius, 0, 2*Math.PI);
 	ctx.fill();
 	ctx.stroke();
-	ctx.beginPath();
-	ctx.moveTo(0,ch/2);
-	ctx.lineTo(cw,ch/2);
-	ctx.stroke();
 }
 
-var t=0;
-var m,n;
-
-function make_obstacle()
-{
-	m = Math.floor((Math.random() * 20) + 1);
-    n = Math.floor((Math.random() * 20) + 1);
-    if(t==20)
-     	t=0;
-    if(t==m) 
-    {
-       	var last_obstacle = obstacles_below[ obstacles_below.length-1 ];
-       	if(!last_obstacle ||last_obstacle.x >= wallspace+BUFFER_OBSTACLE_SPACE ) 
-       	{
-       		BUFFER_OBSTACLE_SPACE-=4;
-	       	k1=Math.floor(Math.random()*10);
-	       	obstacle = new create_obstacle(wallspace+10,y_coordinates[k1],heights[k1],widths[k1]);
-	       	obstacles_below.push(obstacle);
-       	}
-
-	}
-
-	if(t==n)
-	{
-		var last_obstacle = obstacles_above[ obstacles_above.length-1 ];
-		if(!last_obstacle || cw - (last_obstacle.x + last_obstacle.width) >= wallspace+BUFFER_OBSTACLE_SPACE ) 
-		{
-			BUFFER_OBSTACLE_SPACE-=4;
-			k=Math.floor(Math.random()*10);
-			obstacle1 = new create_obstacle((cw-10-wallspace),y_coordinates[k]-ch/2,heights[k],widths[k]);
-			obstacles_above.push(obstacle1);
-		}
-	}
-	
-	i=0;
-	ctx.clearRect(0,0,cw,ch);
-	ctx.fillStyle="black";
-	ctx.fillRect(0, 0, wallspace, ch);
-	ctx.fillRect(cw-wallspace, 0, wallspace, ch);
-	draw_player();
-	
-		
-		
-	while(i<obstacles_above.length)
-	{
-		if(obstacles_above[0].x+obstacles_above[0].width<=wallspace)
-		{
-			obstacles_above.shift();
-			a1--;
-			s=0;
-		}
-		
-		if(obstacles_above[0].x+obstacles_above[0].width<=player.x-radius&&s==0) 
-		{
-			score++;
-			a1++;
-			s=1;
-		}
-		obstacle=obstacles_above[i];
-		obstacle.x-=3;
-		draw_obstacle(obstacle);
-		i++;
-	}
-
-	i=0;
-	
-	while(i<obstacles_below.length)
-	{
-		if(obstacles_below[0].x>=cw-wallspace)
-		{
-			obstacles_below.shift();
-			a2--;
-			s=0;
-		}
-
-		if(obstacles_below[0].x>=player1.x+radius&&s==0)
-		{
-			score++;
-			a2++;
-			s=1;
-		}
-		obstacle=obstacles_below[i];
-		obstacle.x+=3;
-		draw_obstacle(obstacle);
-		i++;
-	}
-	t++;
-}
-
-function draw_obstacle(obstacle)
-{
-	ctx.fillStyle="black";
-	ctx.fillRect(obstacle.x,obstacle.y,obstacle.width,obstacle.height);
-}
 
 function write_score()
 {
@@ -360,6 +436,8 @@ setAnimation = requestAnimationFrame(function()
 			closeness();
 			check_no_lives();
 			draw_lives();
+			pavement.render();
+			pavement1.render();
 			if(player.JUMP_ACTIVATE!=0)
 			{
 				player.jump();
@@ -401,5 +479,5 @@ window.onkeydown = function(event)
 		}
 	}
 }
-})();
+// })();
 
