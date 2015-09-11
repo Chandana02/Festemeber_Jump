@@ -8,10 +8,10 @@ var ctx = canvas.getContext('2d');
 var obstacles_above=[];
 var obstacles_below=[];
 var widths=[72,36,36,32];
-var heights=[33,67,67,80];
+var heights=[33,67,67,70];
 var ch=window.innerHeight;
 var cw=window.innerWidth;
-var y_coordinates=[ch-33,ch-67,ch-67,ch-80];
+var y_coordinates=[ch-33,ch-67,ch-67,ch-70];
 var radius = 10;
 var player;
 var player1;
@@ -29,7 +29,7 @@ var jump_sound = new Audio("sounds/CanonShoot.wav");
 var collision_sound = new Audio("sounds/explosion.wav");
 var bg_sound = new Audio("sounds/bg.wav");
 var obstacles = [];
-var png = ["car-02_72x33.png", "postbox1_36x67.png", "postbox2_36x67.png", "signboard32x80.png"];
+var png = ["images/car-02_72x33.png", "images/postbox1_36x67.png", "images/postbox2_36x67.png", "images/signboard32x80.png"];
 var pw = 945; //pavementWidth
 var ph = 33;  //pavementHeight
 for(u=0;u<4;u++)
@@ -39,7 +39,7 @@ for(u=0;u<4;u++)
 }
 
 var pave = new Image();
-pave.src = "slab945x33.png";
+pave.src = "images/slab945x33.png";
 
 function line(width, height, color) {
 	this.width = width;
