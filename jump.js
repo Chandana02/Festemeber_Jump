@@ -1,5 +1,3 @@
-(function(){
-
 var canvas = document.getElementById("screen");
 canvas.height = window.innerHeight;
 canvas.width = window.innerWidth;
@@ -394,15 +392,20 @@ function draw_lives() {
 function check_no_lives() {
 	if(no_lives==0) {
 		GAME_OVER = 1;
-		try_again("Sorry! You lost! Better luck next time :P" + "<br><br> <button id=\"but\">Try again</button>", "but");
+		try_again("Sorry! You lost! Better luck next time :P");
+
+		window.onkeydown = function (e) {
+			if(e.keyCode == 32)
+				location.reload();
+		}
 	}
 }
 
 var vsx1 = 0;
 var img = new Image();
 img.src = 'images/slab945x33.png';
-function render_game() {
-       
+function render_pavement() {
+      
     ctx.drawImage(img, vsx1, 0, img.width - vsx1, img.height, wallspace, ch/2 - img.height, img.width - vsx1, img.height);
     ctx.drawImage(img, 0, 0, img.width, img.height, wallspace + img.width - vsx1, ch/2 - img.height, img.width, img.height);
     ctx.drawImage(img, 0, 0, img.width, img.height, wallspace + 2 * img.width - vsx1, ch/2 - img.height, img.width, img.height);
@@ -415,11 +418,12 @@ function render_game() {
     if(vsx1 > img.width) {
         vsx1 = 0;
     }
+    scroll = 1;
 }
 
 draw_player();
 
-function try_again(str, id)
+function try_again(str)
 {
 	divtag=document.createElement('div');
 	divtag.style.height=window.innerHeight;
@@ -433,25 +437,25 @@ function try_again(str, id)
 	divtag.style.color = "white";
 	divtag.style.fontFamily = "Comic Sans MS";
 	divtag.align = "center";
-	divtag.innerHTML = str;
+	divtag.innerHTML = str + "<br> Press SPACEBAR to continue";
 	document.body.appendChild(divtag);
-	but = document.getElementById(id);
-	but.style.backgroundColor = "black";
-	but.style.width = "150px";
-	but.style.height = "50px";
-	but.style.fontSize = "30px";
-	but.style.color = "white";  
-	but.style.fontFamily = "Comic Sans MS";
-	but.onclick = function() {location.reload();}
 }
 
-setAnimation = requestAnimationFrame(function()
- {
+bg_sound.play();
+bg = 1;
+
+if(bg == 1) { 
+	start_Game();
+}
+
+function start_Game() {
+	score = 0;
 	if(GAME_OVER!=1&&no_lives!=0) {
-			requestAnimationFrame(arguments.callee);
+			requestAnimationFrame(start_Game);
 			bg_sound.play();
+			bg = 1;
 			ctx.clearRect(0,0,cw,ch);
-			render_game();
+			render_pavement();
 			make_obstacle();
 			check_collision();
 			write_score();
@@ -472,11 +476,11 @@ setAnimation = requestAnimationFrame(function()
 			}
 			if(player.x>=player1.x) {
 				GAME_OVER = 1;
-				try_again("You win! Wanna play again? <br><br> <button id=\"play\">Play again</button>", "play");
+				try_again("You win! Wanna play again?");
 
 			}
 	}
- });
+}
 
 
 window.onkeydown = function(event) 
@@ -501,5 +505,5 @@ window.onkeydown = function(event)
 		}
 	}
 }
-})();
+
 
