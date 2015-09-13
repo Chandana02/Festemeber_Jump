@@ -1,4 +1,4 @@
-// (function(){
+(function(){
 
 var canvas = document.getElementById("screen");
 canvas.height = window.innerHeight;
@@ -11,7 +11,7 @@ var widths=[72,36,36,32];
 var heights=[33,67,67,70];
 var ch=window.innerHeight;
 var cw=window.innerWidth;
-var y_coordinates=[ch-33,ch-67,ch-67,ch-70];
+var y_coordinates=[ch-33,ch-55,ch-55,ch-70];
 var radius = 10;
 var player;
 var player1;
@@ -29,7 +29,7 @@ var jump_sound = new Audio("sounds/CanonShoot.wav");
 var collision_sound = new Audio("sounds/explosion.wav");
 var bg_sound = new Audio("sounds/bg.wav");
 var obstacles = [];
-var png = ["images/car-02_72x33.png", "images/postbox1_36x67.png", "images/postbox2_36x67.png", "images/signboard32x80.png"];
+var png = ["images/car-02_72x33.png", "images/postbox1_30x55.png", "images/postbox2_30x55.png", "images/signboard32x80.png"];
 var pw = 945; //pavementWidth
 var ph = 33;  //pavementHeight
 for(u=0;u<4;u++)
@@ -90,23 +90,23 @@ function create_pavement(options)
 		return pav;
 }
 
-pavement = create_pavement({
-			context: canvas.getContext("2d"),
-			width: pw,
-			height: ph,
-			image:	pave,
-			x: wallspace,
-			y: ch/2-ph
-			});
+// pavement = create_pavement({
+// 			context: canvas.getContext("2d"),
+// 			width: pw,
+// 			height: ph,
+// 			image:	pave,
+// 			x: wallspace,
+// 			y: ch/2-ph
+// 			});
 
-pavement1 = create_pavement({
-			context: canvas.getContext("2d"),
-			width: pw,
-			height: ph,
-			image:	pave,
-			x: wallspace,
-			y: ch-ph
-			});
+// pavement1 = create_pavement({
+// 			context: canvas.getContext("2d"),
+// 			width: pw,
+// 			height: ph,
+// 			image:	pave,
+// 			x: wallspace,
+// 			y: ch-ph
+// 			});
 
 function create_obstacle(options)
 {
@@ -185,7 +185,6 @@ function make_obstacle()
 	}
 	
 	i=0;
-	ctx.clearRect(0,0,cw,ch);
 	ctx.fillStyle="black";
 	ctx.fillRect(0, 0, wallspace, ch);
 	ctx.fillRect(cw-wallspace, 0, wallspace, ch);
@@ -270,6 +269,9 @@ create_player.prototype.jump = function()
 	this.t++;
 	
 }
+
+var d = new Date();
+var time_ini = d.getMinutes(); 
 
 function calculate_distance(pl, ob)
 {
@@ -393,8 +395,26 @@ function check_no_lives() {
 	if(no_lives==0) {
 		GAME_OVER = 1;
 		try_again("Sorry! You lost! Better luck next time :P" + "<br><br> <button id=\"but\">Try again</button>", "but");
-
 	}
+}
+
+var vsx1 = 0;
+var img = new Image();
+img.src = 'images/slab945x33.png';
+function render_game() {
+       
+    ctx.drawImage(img, vsx1, 0, img.width - vsx1, img.height, wallspace, ch/2 - img.height, img.width - vsx1, img.height);
+    ctx.drawImage(img, 0, 0, img.width, img.height, wallspace + img.width - vsx1, ch/2 - img.height, img.width, img.height);
+    ctx.drawImage(img, 0, 0, img.width, img.height, wallspace + 2 * img.width - vsx1, ch/2 - img.height, img.width, img.height);
+
+    ctx.drawImage(img, 0, 0, img.width, img.height, wallspace + vsx1, ch - img.height, img.width, img.height);
+    ctx.drawImage(img, 0, 0, img.width, img.height, wallspace + vsx1 + img.width, ch - img.height, img.width, img.height);
+    ctx.drawImage(img, img.width - vsx1, 0, vsx1, img.height, wallspace, ch - img.height, vsx1, img.height);
+       
+    vsx1 += 3;
+    if(vsx1 > img.width) {
+        vsx1 = 0;
+    }
 }
 
 draw_player();
@@ -430,14 +450,16 @@ setAnimation = requestAnimationFrame(function()
 	if(GAME_OVER!=1&&no_lives!=0) {
 			requestAnimationFrame(arguments.callee);
 			bg_sound.play();
+			ctx.clearRect(0,0,cw,ch);
+			render_game();
 			make_obstacle();
 			check_collision();
 			write_score();
 			closeness();
 			check_no_lives();
 			draw_lives();
-			pavement.render();
-			pavement1.render();
+			//pavement.render();
+			//pavement1.render();
 			if(player.JUMP_ACTIVATE!=0)
 			{
 				player.jump();
@@ -479,5 +501,5 @@ window.onkeydown = function(event)
 		}
 	}
 }
-// })();
+})();
 
