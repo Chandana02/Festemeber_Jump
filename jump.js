@@ -5,6 +5,15 @@ var ctx = canvas.getContext('2d');
 
 var obstacles_above=[];
 var obstacles_below=[];
+// var widths = []
+// var heights = [],y_coordinates = [];
+var png = ["images/car-02_72x33.png", "images/postbox1_30x55.png", "images/bush_51x27.png", "images/signboard32x80.png", "images/cone-02_38x32.png"];
+/*for(q=0;q<5;q++)
+{
+	widths[q]=png[q].width;
+	heights[q]=png[q].height;
+	y_coordinates[q]=ch-png[q].height;
+}*/
 var widths=[72,30,51,32,38];
 var heights=[33,55,27,70,32];
 var ch=window.innerHeight;
@@ -21,23 +30,26 @@ var s=0;
 var a1=0,a2=0;
 var wallspace = window.innerWidth/8;
 var l;
-var lives = [], life, no_lives=3, life_loss = 0;
-var BUFFER_OBSTACLE_SPACE = 350;
+var lives = [], life, no_lives=7, life_loss = 0;
+var BUFFER_OBSTACLE_SPACE = cw/4;
 var jump_sound = new Audio("sounds/CanonShoot.wav");
 var collision_sound = new Audio("sounds/explosion.wav");
 var bg_sound = new Audio("sounds/bg.wav");
 var obstacles = [];
-var png = ["images/car-02_72x33.png", "images/postbox1_30x55.png", "images/bush_51x27.png", "images/signboard32x80.png", "images/cone-02_38x32.png"];
 var pw = 30; //pavementWidth
 var ph = 22;  //pavementHeight
+var widthsprite = 95;
+var heightsprite = 78;
 for(u=0;u<5;u++)
 {
 	obstacles[u] = new Image();
 	obstacles[u].src = png[u];
 }
 
-var pave = new Image();
-pave.src = "images/slab945x33.png";
+var thief = new Image();
+thief.src = "images/thief.png";
+var buyer = new Image();
+buyer.src = "images/thief.png";
 
 function line(width, height, color) {
 	this.width = width;
@@ -49,16 +61,123 @@ function line(width, height, color) {
 
 l = new line(cw-2*wallspace, 10, "blue");
 
-function create_player(x,y,color,ini)
+function create_player(options)
 {
-	this.x=x;
-	this.y=y;
-	this.color=color;
-	this.initial = ini;
-	this.JUMP_ACTIVATE = 0;
-	this.t=0;
-	this.v=6;
+	var xyz = {},
+			frameIndex = 0,
+			tickCount = 0,
+			f=0,
+			ticksPerFrame = options.ticksPerFrame || 0,
+			numberOfFrames = options.numberOfFrames || 1;
+			xyz.numberOfFrames = options.numberOfFrames;
+			xyz.context = options.context;
+			xyz.width = options.width;
+			xyz.height = options.height;
+			xyz.image = options.image;
+			xyz.frames = options.frames;
+			xyz.x = options.x;
+			xyz.y = options.y;
+			xyz.ini = options.ini;
+			xyz.JUMP_ACTIVATE = 0;
+			xyz.t=0;
+			xyz.v=6;
+
+			xyz.update = function() 
+			{
+	            tickCount += 1;
+	            if (tickCount > ticksPerFrame) 
+	            {
+					tickCount = 0;
+	                if (frameIndex < numberOfFrames - 1) 
+	                {	
+	                    frameIndex += 1;
+	                } 
+	                else 
+	                {
+	                    frameIndex = 0;
+	                    f++;
+	                    if(f>=xyz.frames) 
+	                    	{
+	                    		f=0;
+	                    	}
+	                }
+	                       
+           		}
+        	};
+
+        	xyz.jump = function() 
+        	{
+				if(this.t==0)
+					jump_sound.play();
+				if(this.t==100)
+				{
+					this.t=0;
+				}
+				else if(this.t>=25)	
+				{
+					this.y+=this.v;
+					this.v+=0.04;
+				}
+				else 
+				{
+					this.v-=0.12;
+					this.y-=this.v;
+				}
+				if(this.y>=this.ini)
+				{
+					this.JUMP_ACTIVATE = 0;
+					this.y=this.ini;
+				}
+				this.t++;
+				
+			};
+		
+			xyz.render = function () 
+			{
+			  	xyz.context.drawImage(
+			    xyz.image,											//img source
+			    frameIndex * (xyz.width / numberOfFrames),			//sx
+			    f*xyz.height/xyz.frames,									//sy
+			    xyz.width / numberOfFrames,						//sw
+			    xyz.height / xyz.frames,									//sh
+			    xyz.x,												//wx
+			    xyz.y,													//wy
+			    xyz.width / numberOfFrames,						//ww
+			    xyz.height/xyz.frames);										//wh
+			};
+		
+		return xyz;
 }
+
+player = create_player({
+		context: canvas.getContext("2d"),
+		width: widthsprite,
+		height: heightsprite,
+		image:	buyer,
+		numberOfFrames: 2,
+		frames: 1,
+		ticksPerFrame: 15,
+		x: wallspace+20,
+		y: ch/2-heightsprite-ph,
+		ini: ch/2-ph-heightsprite
+});
+
+player1 = create_player({
+		context: canvas.getContext("2d"),
+		width: widthsprite,
+		height: heightsprite,
+		image:	thief,
+		numberOfFrames: 2,
+		frames: 1,
+		ticksPerFrame: 15,
+		x: cw-wallspace-widthsprite/2-20,
+		y: ch-heightsprite-ph,
+		ini: ch-ph-heightsprite
+});
+
+
+
+
 
 function create_obstacle(options)
 {
@@ -74,16 +193,10 @@ function create_obstacle(options)
 			ob.render = function () 
 			{
 				ob.context.drawImage(
-			    ob.image,											//img source
-			   /* 0,													//sx
-			    0,													//sy
-			    ob.width,											//sw
-			    ob.height,*/											//sh
+			    ob.image,												//sh
 			    ob.x,												//wx
-			    ob.y												//wy
-			    //ob.width,											//ww
-			    //ob.height);	
-			    );										//wh
+			    ob.y		
+			    );									
 			};
 		
 		return ob;
@@ -103,6 +216,7 @@ function make_obstacle()
        	var last_obstacle = obstacles_below[ obstacles_below.length-1 ];
        	if(!last_obstacle ||last_obstacle.x >= wallspace+BUFFER_OBSTACLE_SPACE ) 
        	{
+       		// if(BUFFER_OBSTACLE_SPACE>=cw/7)
        		BUFFER_OBSTACLE_SPACE-=4;
 	       	k1=Math.floor(Math.random()*5);
 	       	obstacle = create_obstacle({
@@ -123,6 +237,7 @@ function make_obstacle()
 		var last_obstacle = obstacles_above[ obstacles_above.length-1 ];
 		if(!last_obstacle || cw - (last_obstacle.x + last_obstacle.width) >= wallspace+BUFFER_OBSTACLE_SPACE ) 
 		{
+			// if(BUFFER_OBSTACLE_SPACE>=cw/7)
 			BUFFER_OBSTACLE_SPACE-=4;
 			k=Math.floor(Math.random()*5);
 			obstacle1 = create_obstacle({
@@ -138,12 +253,11 @@ function make_obstacle()
 	}
 	
 	i=0;
+	player.render();
+	player1.render();
 	ctx.fillStyle="black";
 	ctx.fillRect(0, 0, wallspace, ch);
 	ctx.fillRect(cw-wallspace, 0, wallspace, ch);
-	draw_player();
-	
-		
 		
 	while(i<obstacles_above.length)
 	{
@@ -196,113 +310,32 @@ function create_lives(x, y) {
 	this.y = y;
 }
 
-create_player.prototype.jump = function()
-{
-	if(this.t==0)
-		jump_sound.play();
-	if(this.t==100)
-	{
-		this.t=0;
-	}
-	else if(this.t>=25)	
-	{
-		this.y+=this.v;
-		this.v+=0.04;
-	}
-	else 
-	{
-		this.v-=0.12;
-		this.y-=this.v;
-	}
-	if(this.y>=this.initial)
-	{
-		this.JUMP_ACTIVATE = 0;
-		this.y=this.initial
-	}
-	this.t++;
-	
-}
- 
 
-function calculate_distance(pl, ob)
-{
-	z1=pl.x;
-	z2=pl.y;
-	z3=ob.x;
-	z4=ob.y;
-	z5=ob.x+ob.width;
-	y1=(z4-z2)*(z4-z2);
-	if(z1<z3)
-	{
-		x1=(z3-z1)*(z3-z1);
-		r=Math.sqrt(x1+y1);
-	}
-	else
-	{
-		x2=(z5-z1)*(z5-z1);
-		r=Math.sqrt(x2+y1);
-	}
-	return r;
-}
 
 function check_collision()
 {
-	 	for(i=0;i<obstacles_above.length;i++)
+	for(i=0;i<obstacles_above.length;i++)
 	 	{
 
-		 if(player.x+radius>=obstacles_above[i].x&&player.y+radius>=obstacles_above[i].y&&player.x-radius<=obstacles_above[i].x+obstacles_above[i].width)
+		 if(player.x+widthsprite/player.numberOfFrames>=obstacles_above[i].x&&player.y+heightsprite/player.frames>=obstacles_above[i].y&&player.x-widthsprite/player.numberOfFrames<=obstacles_above[i].x+obstacles_above[i].width)
 			{
-				dist=calculate_distance(player, obstacles_above[i]);
-				if(dist<=radius) {
-					no_lives--;
-					obstacles_above=[];
-					obstacles_below=[];
-					collision_sound.play();
-					break;
-				}
 				no_lives--;
 				obstacles_above=[];
 				obstacles_below=[];
-				collision_sound.play();
 			}
-	}
+		}
 		
 		for(ji=0;ji<obstacles_below.length;ji++)
 		{
-			if(player1.x-radius<=obstacles_below[ji].x+obstacles_below[ji].width&&player1.y+radius>=obstacles_below[ji].y&&player1.x+radius>=obstacles_below[ji].x)
+			if(player1.x<=obstacles_below[ji].x+obstacles_below[ji].width&&player1.y+heightsprite/player1.frames>=obstacles_below[ji].y&&player1.x+widthsprite/player1.numberOfFrames>=obstacles_below[ji].x)
 			{
-				dist=calculate_distance(player1, obstacles_below[ji]);
-				if(dist<=radius) {
-					no_lives--;
-					obstacles_below=[];
-					obstacles_above=[];
-					collision_sound.play();
-					break;
-				}
 				no_lives--;
 				obstacles_below=[];
 				obstacles_above=[];
-				collision_sound.play();
 			}
-	}
+		}
 }
 
-player = new create_player(wallspace+20+radius,ch/2-radius-ph,'yellow',ch/2-radius-ph);
-player1 = new create_player(cw-wallspace-radius-20,ch-radius-ph,'red',ch-radius-ph);
-
-function draw_player()
-{
-	ctx.beginPath();
-	ctx.fillStyle=player.color;
-	ctx.arc(player.x,player.y, radius, 0, 2*Math.PI);
-	ctx.fill();
-	ctx.stroke();
-	ctx.beginPath();
-	ctx.fillStyle = player1.color;
-	ctx.arc(player1.x, player1.y, radius, 0, 2*Math.PI);
-	ctx.fill();
-	ctx.stroke();
-}
 
 
 function write_score()
@@ -316,9 +349,9 @@ function write_score()
 function closeness() {
 	ctx.fillStyle = l.color;
 	ctx.fillRect(l.x, l.y, l.width, l.height);
-	ctx.fillStyle = player.color;
+	ctx.fillStyle = "yellow";
 	ctx.fillRect(l.x, l.y, player.x-wallspace, l.height);
-	ctx.fillStyle = player1.color;
+	ctx.fillStyle = "red";
 	ctx.fillRect(player1.x, l.y, cw-wallspace-player1.x, l.height);
 }
 
@@ -364,19 +397,7 @@ function render_pavement() {
     	ctx.drawImage(img, 0, 0, img.width , img.height, wallspace+u*img.width, ch/2 - img.height, img.width - vsx1, img.height);
     	ctx.drawImage(img, 0, 0, img.width , img.height, wallspace+u*img.width, ch - img.height, img.width - vsx1, img.height);
     }
-    /*	ctx.drawImage(img, 0, 0, img.width, img.height, wallspace + vsx1, ch - img.height, img.width, img.height);
-    // ctx.drawImage(img, 3, 0, img.width, img.height, wallspace + img.width - vsx1, ch/2 - img.height, img.width, img.height);
-    // ctx.drawImage(img, 3, 0, img.width, img.height, wallspace + 2 * img.width - vsx1, ch/2 - img.height, img.width, img.height);
-
-    ctx.drawImage(img, 3, 0, img.width, img.height, wallspace + vsx1, ch - img.height, img.width, img.height);
-    ctx.drawImage(img, 3, 0, img.width, img.height, wallspace + vsx1 + img.width, ch - img.height, img.width, img.height);
-    ctx.drawImage(img, img.width - vsx1, 0, vsx1, img.height, wallspace, ch - img.height, vsx1, img.height);*/
-       
-   /* vsx1 += 3;
-    if(vsx1 > img.width) {
-        vsx1 = 3;
-    }
-    scroll = 1;*/
+   
 }
 
 
@@ -399,9 +420,6 @@ function render_background()
         vsx1 = 0;
     }
 }
-
-
-draw_player();
 
 function try_again(str)
 {
@@ -446,7 +464,7 @@ function start_Game() {
 	
 	if(GAME_OVER!=1&&no_lives!=0) {
 			requestAnimationFrame(start_Game);
-			//bg_sound.play();
+			// bg_sound.play();
 			bg = 1;
 			ctx.clearRect(0,0,cw,ch);
 			render_background();
@@ -457,8 +475,8 @@ function start_Game() {
 			closeness();
 			check_no_lives();
 			draw_lives();
-			//pavement.render();
-			//pavement1.render();
+			player.update();
+			player1.update();
 			if(player.JUMP_ACTIVATE!=0)
 			{
 				player.jump();
@@ -472,6 +490,10 @@ function start_Game() {
 			if(player.x>=player1.x) {
 				GAME_OVER = 1;
 				try_again("You win! Wanna play again?");
+				 window.onkeydown = function (e) {
+				if(e.keyCode == 32)
+				location.reload();
+				}
 
 			}
 	}
@@ -483,7 +505,7 @@ window.onkeydown = function(event)
 	e=event.keyCode;
 	if(e==65)
 	{
-		if(player.y==player.initial)
+		if(player.y==player.ini)
 		{
 			player.v=6;
 			player.JUMP_ACTIVATE = 1;
@@ -492,7 +514,7 @@ window.onkeydown = function(event)
 	}
 	else if(e==76)
 	{
-		if(player1.y==player1.initial)
+		if(player1.y==player1.ini)
 		{
 			player1.JUMP_ACTIVATE = 1;
 			player1.t=0;
