@@ -380,25 +380,24 @@ function render_pavement() {
 }
 
 
-var vx = 0;
+var vsx1 = 0;
 var bg1 = new Image();
-var vx2 = bg1.width;
 bg1.src = 'images/bg1.png';
 function render_background()
 {
-	ctx.drawImage(bg1, vx, 0);
-	ctx.drawImage(bg1, bg1.width-Math.abs(vx), 0);
-	ctx.drawImage(bg1, vx2, ch/2);
-	ctx.drawImage(bg1, Math.abs(vx2) - bg1.width, ch/2);
+	 
+    ctx.drawImage(img, vsx1, 0, img.width - vsx1, img.height, wallspace, 0, img.width - vsx1, img.height);
+    ctx.drawImage(img, 0, 0, img.width, img.height, wallspace + img.width - vsx1, 0, img.width, img.height);
+    ctx.drawImage(img, 0, 0, img.width, img.height, wallspace + 2 * img.width - vsx1, 0, img.width, img.height);
 
-	if (Math.abs(vx) > bg1.width) {
-		vx = 0;
-	}
-	vx-=2;
-	if(Math.abs(vx2) > 2*bg1.width) {
-		vx2 = bg1.width;
-	}
-	vx2 += 2;
+    ctx.drawImage(img, 0, 0, img.width, img.height, wallspace + vsx1, ch/2, img.width, img.height);
+    ctx.drawImage(img, 0, 0, img.width, img.height, wallspace + vsx1 + img.width, ch/2, img.width, img.height);
+    ctx.drawImage(img, img.width - vsx1, 0, vsx1 + 1, img.height, wallspace, ch/2, vsx1, img.height);
+   
+    vsx1 += 2;
+    if(vsx1 >= img.width) {
+        vsx1 = 0;
+    }
 }
 
 
