@@ -15,10 +15,10 @@ var png = ["images/car-02_72x33.png", "images/postbox1_30x55.png", "images/bush_
 	y_coordinates[q]=ch-png[q].height;
 }*/
 var widths=[72,30,51,32,38];
-var heights=[33,55,27,70,32];
+var heights=[33,55,27,80,32];
 var ch=window.innerHeight;
 var cw=window.innerWidth;
-var y_coordinates=[ch-33,ch-55,ch-27,ch-70,ch-32];
+var y_coordinates=[ch-33,ch-55,ch-27,ch-80,ch-32];
 var radius = 10;
 var player;
 var player1;
@@ -30,7 +30,7 @@ var s=0;
 var a1=0,a2=0;
 var wallspace = window.innerWidth/8;
 var l;
-var lives = [], life, no_lives=7, life_loss = 0;
+var lives = [], life, no_lives=5, life_loss = 0;
 var BUFFER_OBSTACLE_SPACE = cw/4;
 var jump_sound = new Audio("sounds/CanonShoot.wav");
 var collision_sound = new Audio("sounds/explosion.wav");
@@ -80,7 +80,7 @@ function create_player(options)
 			xyz.ini = options.ini;
 			xyz.JUMP_ACTIVATE = 0;
 			xyz.t=0;
-			xyz.v=6;
+			xyz.v=8;
 
 			xyz.update = function() 
 			{
@@ -109,18 +109,18 @@ function create_player(options)
         	{
 				if(this.t==0)
 					jump_sound.play();
-				if(this.t==100)
+				if(this.t==110)
 				{
 					this.t=0;
 				}
 				else if(this.t>=25)	
 				{
 					this.y+=this.v;
-					this.v+=0.04;
+					this.v+=0.02;
 				}
 				else 
 				{
-					this.v-=0.12;
+					this.v-=0.10;
 					this.y-=this.v;
 				}
 				if(this.y>=this.ini)
@@ -217,7 +217,7 @@ function make_obstacle()
        	if(!last_obstacle ||last_obstacle.x >= wallspace+BUFFER_OBSTACLE_SPACE ) 
        	{
        		// if(BUFFER_OBSTACLE_SPACE>=cw/7)
-       		BUFFER_OBSTACLE_SPACE-=4;
+       		BUFFER_OBSTACLE_SPACE-=3;
 	       	k1=Math.floor(Math.random()*5);
 	       	obstacle = create_obstacle({
 			context: canvas.getContext("2d"),
@@ -238,7 +238,7 @@ function make_obstacle()
 		if(!last_obstacle || cw - (last_obstacle.x + last_obstacle.width) >= wallspace+BUFFER_OBSTACLE_SPACE ) 
 		{
 			// if(BUFFER_OBSTACLE_SPACE>=cw/7)
-			BUFFER_OBSTACLE_SPACE-=4;
+			BUFFER_OBSTACLE_SPACE-=3;
 			k=Math.floor(Math.random()*5);
 			obstacle1 = create_obstacle({
 			context: canvas.getContext("2d"),
@@ -268,7 +268,7 @@ function make_obstacle()
 			s=0;
 		}
 		
-		if(obstacles_above[0].x+obstacles_above[0].width<=player.x-radius&&s==0) 
+		if(obstacles_above[0].x+obstacles_above[0].width<=player.x&&s==0) 
 		{
 			score++;
 			a1++;
@@ -291,7 +291,7 @@ function make_obstacle()
 			s=0;
 		}
 
-		if(obstacles_below[0].x>=player1.x+radius&&s==0)
+		if(obstacles_below[0].x>=player1.x+player1.width&&s==0)
 		{
 			score++;
 			a2++;
@@ -387,15 +387,15 @@ function check_no_lives() {
 	}
 }
 
-var vsx1 = 0;
+var vsx = 0;
 var img = new Image();
 img.src = 'images/brick-02_30x22.png';
 function render_pavement() {
 
     for(u=0;u<40;u++)
     {
-    	ctx.drawImage(img, 0, 0, img.width , img.height, wallspace+u*img.width, ch/2 - img.height, img.width - vsx1, img.height);
-    	ctx.drawImage(img, 0, 0, img.width , img.height, wallspace+u*img.width, ch - img.height, img.width - vsx1, img.height);
+    	ctx.drawImage(img, 0, 0, img.width , img.height, wallspace+u*img.width, ch/2 - img.height, img.width - vsx, img.height);
+    	ctx.drawImage(img, 0, 0, img.width , img.height, wallspace+u*img.width, ch - img.height, img.width - vsx, img.height);
     }
    
 }
@@ -407,16 +407,16 @@ bg1.src = 'images/bg1.png';
 function render_background()
 {
 	 
-    ctx.drawImage(img, vsx1, 0, img.width - vsx1, img.height, wallspace, 0, img.width - vsx1, img.height);
-    ctx.drawImage(img, 0, 0, img.width, img.height, wallspace + img.width - vsx1, 0, img.width, img.height);
-    ctx.drawImage(img, 0, 0, img.width, img.height, wallspace + 2 * img.width - vsx1, 0, img.width, img.height);
+    ctx.drawImage(bg1, vsx1, 0, bg1.width - vsx1, bg1.height, wallspace, 0, bg1.width - vsx1, bg1.height);
+    ctx.drawImage(bg1, 0, 0, bg1.width, bg1.height, wallspace + bg1.width - vsx1, 0, bg1.width, bg1.height);
+    ctx.drawImage(bg1, 0, 0, bg1.width, bg1.height, wallspace + 2 * bg1.width - vsx1, 0, bg1.width, bg1.height);
 
-    ctx.drawImage(img, 0, 0, img.width, img.height, wallspace + vsx1, ch/2, img.width, img.height);
-    ctx.drawImage(img, 0, 0, img.width, img.height, wallspace + vsx1 + img.width, ch/2, img.width, img.height);
-    ctx.drawImage(img, img.width - vsx1, 0, vsx1 + 1, img.height, wallspace, ch/2, vsx1, img.height);
+    ctx.drawImage(bg1, 0, 0, bg1.width, bg1.height, wallspace + vsx1, ch/2, bg1.width, bg1.height);
+    ctx.drawImage(bg1, 0, 0, bg1.width, bg1.height, wallspace + vsx1 + bg1.width, ch/2, bg1.width, bg1.height);
+    ctx.drawImage(bg1, bg1.width - vsx1, 0, vsx1 , bg1.height, wallspace, ch/2, vsx1, bg1.height);
    
     vsx1 += 2;
-    if(vsx1 >= img.width) {
+    if(vsx1 >= bg1.width) {
         vsx1 = 0;
     }
 }
@@ -480,12 +480,12 @@ function start_Game() {
 			if(player.JUMP_ACTIVATE!=0)
 			{
 				player.jump();
-				player.x+=(window.innerWidth/10000)*3;
+				player.x+=(window.innerWidth/10000)*4;
 			}
 			if(player1.JUMP_ACTIVATE!=0)
 			{
 				player1.jump();
-				player1.x-=(window.innerWidth/10000)*3;
+				player1.x-=(window.innerWidth/10000)*4;
 			}
 			if(player.x>=player1.x) {
 				GAME_OVER = 1;
@@ -507,7 +507,7 @@ window.onkeydown = function(event)
 	{
 		if(player.y==player.ini)
 		{
-			player.v=6;
+			player.v=8;
 			player.JUMP_ACTIVATE = 1;
 			player.t=0;
 		}
@@ -518,7 +518,7 @@ window.onkeydown = function(event)
 		{
 			player1.JUMP_ACTIVATE = 1;
 			player1.t=0;
-			player1.v=6;
+			player1.v=8;
 		}
 	}
 }
