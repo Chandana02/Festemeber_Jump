@@ -30,7 +30,7 @@ var s=0;
 var a1=0,a2=0;
 var wallspace = window.innerWidth/8;
 var l;
-var lives = [], life, no_lives=5, life_loss = 0;
+var lives = [], life, no_lives=4, life_loss = 0;
 var BUFFER_OBSTACLE_SPACE = cw/4;
 var jump_sound = new Audio("sounds/CanonShoot.wav");
 var collision_sound = new Audio("sounds/explosion.wav");
@@ -109,7 +109,7 @@ function create_player(options)
         	{
 				if(this.t==0)
 					jump_sound.play();
-				if(this.t==110)
+				if(this.t==120)
 				{
 					this.t=0;
 				}
@@ -217,7 +217,7 @@ function make_obstacle()
        	if(!last_obstacle ||last_obstacle.x >= wallspace+BUFFER_OBSTACLE_SPACE ) 
        	{
        		// if(BUFFER_OBSTACLE_SPACE>=cw/7)
-       		BUFFER_OBSTACLE_SPACE-=3;
+       		BUFFER_OBSTACLE_SPACE-=2;
 	       	k1=Math.floor(Math.random()*5);
 	       	obstacle = create_obstacle({
 			context: canvas.getContext("2d"),
@@ -238,7 +238,7 @@ function make_obstacle()
 		if(!last_obstacle || cw - (last_obstacle.x + last_obstacle.width) >= wallspace+BUFFER_OBSTACLE_SPACE ) 
 		{
 			// if(BUFFER_OBSTACLE_SPACE>=cw/7)
-			BUFFER_OBSTACLE_SPACE-=3;
+			BUFFER_OBSTACLE_SPACE-=2;
 			k=Math.floor(Math.random()*5);
 			obstacle1 = create_obstacle({
 			context: canvas.getContext("2d"),
@@ -480,12 +480,12 @@ function start_Game() {
 			if(player.JUMP_ACTIVATE!=0)
 			{
 				player.jump();
-				player.x+=(window.innerWidth/10000)*4;
+				player.x+=(window.innerWidth/10000)*5;
 			}
 			if(player1.JUMP_ACTIVATE!=0)
 			{
 				player1.jump();
-				player1.x-=(window.innerWidth/10000)*4;
+				player1.x-=(window.innerWidth/10000)*5;
 			}
 			if(player.x>=player1.x) {
 				GAME_OVER = 1;
