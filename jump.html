@@ -12,12 +12,31 @@
 </style>
 </head>
 <body style="margin:0px;">
+<script type="text/javascript">
+	window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '1387720708193877',
+      xfbml      : true,
+      version    : 'v2.4'
+    });
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+</script>
 <div id="canvas-wrap">
 <canvas id="screen"></canvas>
 <div id="overlay"><a href='https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Ffestember.com' title='Facebook' target='_BLANK'><img src='images/facebookshare.jpeg' width="70" height="20"></a></div>
 <iframe id="one" src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Ffacebook.com%2Ffestember?fref=ts&layout=button_count&show_faces=false&width=90&action=like&colorscheme=light" scrolling="no" frameborder="0" allowTransparency="true"
 style="border:none; overflow:hidden; width:90px;
 height:20px;"></iframe>
+
+
 
 <!--<iframe id="two" src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fogp.me%2F&send=false&layout=standard&width=90&show_faces=true&action=like&colorscheme=light&height=80&appId=115190258555800" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:450px; height:80px;" allowTransparency="true"></iframe> -->
 

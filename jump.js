@@ -5,11 +5,11 @@ var ctx = canvas.getContext('2d');
 
 var obstacles_above=[];
 var obstacles_below=[];
-var widths=[72,30,72,32,30,58];
-var heights=[33,55,38,70,22,49];
+var widths=[72,30,72,32,58];
+var heights=[33,55,38,70,49];
 var ch=window.innerHeight;
 var cw=window.innerWidth;
-var y_coordinates=[ch-33,ch-55,ch-38,ch-70,ch-22,ch-49];
+var y_coordinates=[ch-33,ch-55,ch-38,ch-70,ch-49];
 var radius = 10;
 var player;
 var player1;
@@ -27,10 +27,10 @@ var jump_sound = new Audio("sounds/CanonShoot.wav");
 var collision_sound = new Audio("sounds/explosion.wav");
 var bg_sound = new Audio("sounds/bg.wav");
 var obstacles = [];
-var png = ["images/car-02_72x33.png", "images/postbox1_30x55.png", "images/bush_72x38.png", "images/signboard32x80.png", "images/brick-02_30x22.png", "images/cone-02_58x49.png"];
-var pw = 945; //pavementWidth
-var ph = 33;  //pavementHeight
-for(u=0;u<6;u++)
+var png = ["images/car-02_72x33.png", "images/postbox1_30x55.png", "images/bush_72x38.png", "images/signboard32x80.png", "images/cone-02_58x49.png"];
+var pw = 30; //pavementWidth
+var ph = 22;  //pavementHeight
+for(u=0;u<5;u++)
 {
 	obstacles[u] = new Image();
 	obstacles[u].src = png[u];
@@ -104,7 +104,7 @@ function make_obstacle()
        	if(!last_obstacle ||last_obstacle.x >= wallspace+BUFFER_OBSTACLE_SPACE ) 
        	{
        		BUFFER_OBSTACLE_SPACE-=4;
-	       	k1=Math.floor(Math.random()*6);
+	       	k1=Math.floor(Math.random()*5);
 	       	obstacle = create_obstacle({
 			context: canvas.getContext("2d"),
 			width: widths[k1],
@@ -124,7 +124,7 @@ function make_obstacle()
 		if(!last_obstacle || cw - (last_obstacle.x + last_obstacle.width) >= wallspace+BUFFER_OBSTACLE_SPACE ) 
 		{
 			BUFFER_OBSTACLE_SPACE-=4;
-			k=Math.floor(Math.random()*6);
+			k=Math.floor(Math.random()*5);
 			obstacle1 = create_obstacle({
 			context: canvas.getContext("2d"),
 			width: widths[k],
@@ -222,9 +222,7 @@ create_player.prototype.jump = function()
 	this.t++;
 	
 }
-
-var d = new Date();
-var time_ini = d.getMinutes(); 
+ 
 
 function calculate_distance(pl, ob)
 {
@@ -358,22 +356,27 @@ function check_no_lives() {
 
 var vsx1 = 0;
 var img = new Image();
-img.src = 'images/slab945x33.png';
+img.src = 'images/brick-02_30x22.png';
 function render_pavement() {
-       if(vsx1 >= img.width) {
-        vsx1 = 0;
-    }
-    ctx.drawImage(img, vsx1, 0, img.width - vsx1, img.height, wallspace, Math.floor(ch/2 - img.height), img.width - vsx1, img.height);
-    ctx.drawImage(img, 0, 0, img.width, img.height, wallspace + img.width - vsx1, Math.floor(ch/2 - img.height), img.width, img.height);
-    ctx.drawImage(img, 0, 0, img.width, img.height, wallspace + 2 * img.width - vsx1, Math.floor(ch/2 - img.height), img.width, img.height);
 
-    ctx.drawImage(img, 0, 0, img.width, img.height, wallspace + vsx1, ch - img.height, img.width, img.height);
-    ctx.drawImage(img, 0, 0, img.width, img.height, wallspace + vsx1 + img.width, ch - img.height, img.width, img.height);
-    ctx.drawImage(img, img.width - vsx1, 0, vsx1 + 1, img.height, wallspace, ch - img.height, vsx1, img.height);
-   
-    vsx1 += 1;
-   
-    scroll = 1;
+    for(u=0;u<40;u++)
+    {
+    	ctx.drawImage(img, 0, 0, img.width , img.height, wallspace+u*img.width, ch/2 - img.height, img.width - vsx1, img.height);
+    	ctx.drawImage(img, 0, 0, img.width , img.height, wallspace+u*img.width, ch - img.height, img.width - vsx1, img.height);
+    }
+    /*	ctx.drawImage(img, 0, 0, img.width, img.height, wallspace + vsx1, ch - img.height, img.width, img.height);
+    // ctx.drawImage(img, 3, 0, img.width, img.height, wallspace + img.width - vsx1, ch/2 - img.height, img.width, img.height);
+    // ctx.drawImage(img, 3, 0, img.width, img.height, wallspace + 2 * img.width - vsx1, ch/2 - img.height, img.width, img.height);
+
+    ctx.drawImage(img, 3, 0, img.width, img.height, wallspace + vsx1, ch - img.height, img.width, img.height);
+    ctx.drawImage(img, 3, 0, img.width, img.height, wallspace + vsx1 + img.width, ch - img.height, img.width, img.height);
+    ctx.drawImage(img, img.width - vsx1, 0, vsx1, img.height, wallspace, ch - img.height, vsx1, img.height);*/
+       
+   /* vsx1 += 3;
+    if(vsx1 > img.width) {
+        vsx1 = 3;
+    }
+    scroll = 1;*/
 }
 
 
@@ -392,7 +395,7 @@ function render_background()
 		vx = 0;
 	}
 	vx-=2;
-	if(Math.abs(vx2) > 2*    bg1.width) {
+	if(Math.abs(vx2) > 2*bg1.width) {
 		vx2 = bg1.width;
 	}
 	vx2 += 2;
