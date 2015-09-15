@@ -5,11 +5,11 @@ var ctx = canvas.getContext('2d');
 
 var obstacles_above=[];
 var obstacles_below=[];
-var widths=[72,30,72,32,58];
-var heights=[33,55,38,70,49];
+var widths=[72,30,51,32,38];
+var heights=[33,55,27,70,32];
 var ch=window.innerHeight;
 var cw=window.innerWidth;
-var y_coordinates=[ch-33,ch-55,ch-38,ch-70,ch-49];
+var y_coordinates=[ch-33,ch-55,ch-27,ch-70,ch-32];
 var radius = 10;
 var player;
 var player1;
@@ -22,12 +22,12 @@ var a1=0,a2=0;
 var wallspace = window.innerWidth/8;
 var l;
 var lives = [], life, no_lives=3, life_loss = 0;
-var BUFFER_OBSTACLE_SPACE = 300;
+var BUFFER_OBSTACLE_SPACE = 350;
 var jump_sound = new Audio("sounds/CanonShoot.wav");
 var collision_sound = new Audio("sounds/explosion.wav");
 var bg_sound = new Audio("sounds/bg.wav");
 var obstacles = [];
-var png = ["images/car-02_72x33.png", "images/postbox1_30x55.png", "images/bush_72x38.png", "images/signboard32x80.png", "images/cone-02_58x49.png"];
+var png = ["images/car-02_72x33.png", "images/postbox1_30x55.png", "images/bush_51x27.png", "images/signboard32x80.png", "images/cone-02_38x32.png"];
 var pw = 30; //pavementWidth
 var ph = 22;  //pavementHeight
 for(u=0;u<5;u++)
