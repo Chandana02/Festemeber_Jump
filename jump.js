@@ -5,11 +5,11 @@ var ctx = canvas.getContext('2d');
 
 var obstacles_above=[];
 var obstacles_below=[];
-var widths=[72,36,36,32];
-var heights=[33,67,67,70];
+var widths=[72,30,72,32,30,58];
+var heights=[33,55,38,70,22,49];
 var ch=window.innerHeight;
 var cw=window.innerWidth;
-var y_coordinates=[ch-33,ch-55,ch-55,ch-70];
+var y_coordinates=[ch-33,ch-55,ch-38,ch-70,ch-22,ch-49];
 var radius = 10;
 var player;
 var player1;
@@ -27,10 +27,10 @@ var jump_sound = new Audio("sounds/CanonShoot.wav");
 var collision_sound = new Audio("sounds/explosion.wav");
 var bg_sound = new Audio("sounds/bg.wav");
 var obstacles = [];
-var png = ["images/car-02_72x33.png", "images/postbox1_30x55.png", "images/postbox2_30x55.png", "images/signboard32x80.png"];
+var png = ["images/car-02_72x33.png", "images/postbox1_30x55.png", "images/bush_72x38.png", "images/signboard32x80.png", "images/brick-02_30x22.png", "images/cone-02_58x49.png"];
 var pw = 945; //pavementWidth
 var ph = 33;  //pavementHeight
-for(u=0;u<4;u++)
+for(u=0;u<6;u++)
 {
 	obstacles[u] = new Image();
 	obstacles[u].src = png[u];
@@ -60,52 +60,6 @@ function create_player(x,y,color,ini)
 	this.v=6;
 }
 
-function create_pavement(options)
-{
-	var pav = {};
-			
-			pav.context = options.context;
-			pav.width = options.width;
-			pav.height = options.height;
-			pav.image = options.image;
-			pav.x = options.x;
-			pav.y = options.y;
-		
-			pav.render = function () 
-			{
-			  	pav.context.drawImage(
-			    pav.image,											//img source
-			    0,													//sx
-			    0,													//sy
-			    pav.width,											//sw
-			    pav.height,											//sh
-			    pav.x,												//wx
-			    pav.y,												//wy
-			    pav.width,											//ww
-			    pav.height);											//wh
-			};
-		
-		return pav;
-}
-
-// pavement = create_pavement({
-// 			context: canvas.getContext("2d"),
-// 			width: pw,
-// 			height: ph,
-// 			image:	pave,
-// 			x: wallspace,
-// 			y: ch/2-ph
-// 			});
-
-// pavement1 = create_pavement({
-// 			context: canvas.getContext("2d"),
-// 			width: pw,
-// 			height: ph,
-// 			image:	pave,
-// 			x: wallspace,
-// 			y: ch-ph
-// 			});
-
 function create_obstacle(options)
 {
 	var ob = {};
@@ -119,16 +73,17 @@ function create_obstacle(options)
 		
 			ob.render = function () 
 			{
-			  	ob.context.drawImage(
+				ob.context.drawImage(
 			    ob.image,											//img source
-			    0,													//sx
+			   /* 0,													//sx
 			    0,													//sy
 			    ob.width,											//sw
-			    ob.height,											//sh
+			    ob.height,*/											//sh
 			    ob.x,												//wx
-			    ob.y,												//wy
-			    ob.width,											//ww
-			    ob.height);											//wh
+			    ob.y												//wy
+			    //ob.width,											//ww
+			    //ob.height);	
+			    );										//wh
 			};
 		
 		return ob;
@@ -149,7 +104,7 @@ function make_obstacle()
        	if(!last_obstacle ||last_obstacle.x >= wallspace+BUFFER_OBSTACLE_SPACE ) 
        	{
        		BUFFER_OBSTACLE_SPACE-=4;
-	       	k1=Math.floor(Math.random()*4);
+	       	k1=Math.floor(Math.random()*6);
 	       	obstacle = create_obstacle({
 			context: canvas.getContext("2d"),
 			width: widths[k1],
@@ -157,7 +112,7 @@ function make_obstacle()
 			image:	obstacles[k1],
 			x: wallspace,
 			y: y_coordinates[k1]-ph
-			});
+			});	
 	       	obstacles_below.push(obstacle);
        	}
 
@@ -169,7 +124,7 @@ function make_obstacle()
 		if(!last_obstacle || cw - (last_obstacle.x + last_obstacle.width) >= wallspace+BUFFER_OBSTACLE_SPACE ) 
 		{
 			BUFFER_OBSTACLE_SPACE-=4;
-			k=Math.floor(Math.random()*4);
+			k=Math.floor(Math.random()*6);
 			obstacle1 = create_obstacle({
 			context: canvas.getContext("2d"),
 			width: widths[k],
@@ -207,7 +162,7 @@ function make_obstacle()
 		}
 		obstacle=obstacles_above[i];
 		obstacle.x-=3;
-		obstacle.render();;
+		obstacle.render();
 		i++;
 	}
 
@@ -405,37 +360,42 @@ var vsx1 = 0;
 var img = new Image();
 img.src = 'images/slab945x33.png';
 function render_pavement() {
-      
-    ctx.drawImage(img, vsx1, 0, img.width - vsx1, img.height, wallspace, ch/2 - img.height, img.width - vsx1, img.height);
-    ctx.drawImage(img, 0, 0, img.width, img.height, wallspace + img.width - vsx1, ch/2 - img.height, img.width, img.height);
-    ctx.drawImage(img, 0, 0, img.width, img.height, wallspace + 2 * img.width - vsx1, ch/2 - img.height, img.width, img.height);
+       if(vsx1 >= img.width) {
+        vsx1 = 0;
+    }
+    ctx.drawImage(img, vsx1, 0, img.width - vsx1, img.height, wallspace, Math.floor(ch/2 - img.height), img.width - vsx1, img.height);
+    ctx.drawImage(img, 0, 0, img.width, img.height, wallspace + img.width - vsx1, Math.floor(ch/2 - img.height), img.width, img.height);
+    ctx.drawImage(img, 0, 0, img.width, img.height, wallspace + 2 * img.width - vsx1, Math.floor(ch/2 - img.height), img.width, img.height);
 
     ctx.drawImage(img, 0, 0, img.width, img.height, wallspace + vsx1, ch - img.height, img.width, img.height);
     ctx.drawImage(img, 0, 0, img.width, img.height, wallspace + vsx1 + img.width, ch - img.height, img.width, img.height);
-    ctx.drawImage(img, img.width - vsx1, 0, vsx1, img.height, wallspace, ch - img.height, vsx1, img.height);
-       
-    vsx1 += 3;
-    if(vsx1 > img.width) {
-        vsx1 = 0;
-    }
+    ctx.drawImage(img, img.width - vsx1, 0, vsx1 + 1, img.height, wallspace, ch - img.height, vsx1, img.height);
+   
+    vsx1 += 1;
+   
     scroll = 1;
 }
 
 
 var vx = 0;
 var bg1 = new Image();
+var vx2 = bg1.width;
 bg1.src = 'images/bg1.png';
 function render_background()
 {
 	ctx.drawImage(bg1, vx, 0);
 	ctx.drawImage(bg1, bg1.width-Math.abs(vx), 0);
-	ctx.drawImage(bg1, vx, ch/2);
-	ctx.drawImage(bg1, bg1.width-Math.abs(vx), ch/2);
+	ctx.drawImage(bg1, vx2, ch/2);
+	ctx.drawImage(bg1, Math.abs(vx2) - bg1.width, ch/2);
 
 	if (Math.abs(vx) > bg1.width) {
 		vx = 0;
 	}
 	vx-=2;
+	if(Math.abs(vx2) > 2*    bg1.width) {
+		vx2 = bg1.width;
+	}
+	vx2 += 2;
 }
 
 
@@ -451,26 +411,40 @@ function try_again(str)
 	divtag.style.position = "absolute";
 	divtag.style.left = "0px";
 	divtag.style.top = "0px";
-	divtag.style.fontSize = "100px";
+	divtag.style.fontSize = "40px";
 	divtag.style.color = "white";
 	divtag.style.fontFamily = "Comic Sans MS";
 	divtag.align = "center";
-	divtag.innerHTML = str + "<br> Press SPACEBAR to continue";
+	divtag.innerHTML = "Your score is:" + score + "<br>" + str + "<br> Press SPACEBAR to continue";
+	// button = document.createElement("button");
+	// divtag.appendChild(button);
+	// button.onClick = function(){
+	// 			FB.ui({
+	// 	  method: 'share',
+	// 	  name: "I got ! Which European are you destined to date?",
+	// 	  link: "http://www.festember.com/",
+		  
+	// 	  description: "fhdfh"});
+	// }
+
 	document.body.appendChild(divtag);
 }
 
-bg_sound.play();
+//bg_sound.play();
 bg = 1;
 
 if(bg == 1) { 
 	start_Game();
 }
 
+
+		
 function start_Game() {
-	score = 0;
+
+	
 	if(GAME_OVER!=1&&no_lives!=0) {
 			requestAnimationFrame(start_Game);
-			bg_sound.play();
+			//bg_sound.play();
 			bg = 1;
 			ctx.clearRect(0,0,cw,ch);
 			render_background();
