@@ -270,7 +270,7 @@ function make_obstacle()
 		
 		if(obstacles_above[0].x+obstacles_above[0].width<=player.x&&s==0) 
 		{
-			score++;
+			score+=10;
 			a1++;
 			s=1;
 		}
@@ -293,7 +293,7 @@ function make_obstacle()
 
 		if(obstacles_below[0].x>=player1.x+player1.width&&s==0)
 		{
-			score++;
+			score+=10;
 			a2++;
 			s=1;
 		}
@@ -424,6 +424,7 @@ function render_background()
 function try_again(str)
 {
 	divtag=document.createElement('div');
+	divtag.id = "again";
 	divtag.style.height=window.innerHeight;
 	divtag.style.width=window.innerWidth;
 	divtag.style.backgroundColor="black";
@@ -435,19 +436,22 @@ function try_again(str)
 	divtag.style.color = "white";
 	divtag.style.fontFamily = "Comic Sans MS";
 	divtag.align = "center";
+
 	divtag.innerHTML = "Your score is:" + score + "<br>" + str + "<br> Press SPACEBAR to continue";
-	// button = document.createElement("button");
-	// divtag.appendChild(button);
-	// button.onClick = function(){
-	// 			FB.ui({
-	// 	  method: 'share',
-	// 	  name: "I got ! Which European are you destined to date?",
-	// 	  link: "http://www.festember.com/",
+	but = document.createElement("button");
+	but.innerHTML = "share";
+	but.onClick = function(){
+				FB.ui({
+		  method: 'share',
+		  name: "I got ! Which European are you destined to date?",
+		  link: "http://www.festember.com/",
 		  
-	// 	  description: "fhdfh"});
-	// }
+		  description: "I scored " + score + ". Can you beat this?"});
+	};
 
 	document.body.appendChild(divtag);
+
+	document.getElementById("again").appendChild(but);
 }
 
 //bg_sound.play();
