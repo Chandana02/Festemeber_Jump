@@ -427,10 +427,10 @@ var bg1 = new Image();
 bg1.src = 'images/bg1.png';
 function render_background()
 {
-	ctx.drawImage(bg1, vx, 50);
-	ctx.drawImage(bg1, bg1.width-Math.abs(vx), 50);
-	ctx.drawImage(bg1, vx, 50+ch/2);
-	ctx.drawImage(bg1, bg1.width-Math.abs(vx), 50+ch/2);
+	ctx.drawImage(bg1, vx, 0);
+	ctx.drawImage(bg1, bg1.width-Math.abs(vx), 0);
+	ctx.drawImage(bg1, vx, ch/2);
+	ctx.drawImage(bg1, bg1.width-Math.abs(vx), ch/2);
 
 	if (Math.abs(vx) > bg1.width) {
 		vx = 0;
