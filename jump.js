@@ -421,6 +421,24 @@ function render_pavement() {
     scroll = 1;
 }
 
+
+var vx = 0;
+var bg1 = new Image();
+bg1.src = 'images/bg1.png';
+function render_background()
+{
+	ctx.drawImage(bg1, vx, 50);
+	ctx.drawImage(bg1, bg1.width-Math.abs(vx), 50);
+	ctx.drawImage(bg1, vx, 50+ch/2);
+	ctx.drawImage(bg1, bg1.width-Math.abs(vx), 50+ch/2);
+
+	if (Math.abs(vx) > bg1.width) {
+		vx = 0;
+	}
+	vx-=2;
+}
+
+
 draw_player();
 
 function try_again(str)
@@ -455,6 +473,7 @@ function start_Game() {
 			bg_sound.play();
 			bg = 1;
 			ctx.clearRect(0,0,cw,ch);
+			render_background();
 			render_pavement();
 			make_obstacle();
 			check_collision();
