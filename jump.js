@@ -317,7 +317,7 @@ function check_collision()
 	for(i=0;i<obstacles_above.length;i++)
 	 	{
 
-		 if(player.x+widthsprite/player.numberOfFrames>=obstacles_above[i].x&&player.y+heightsprite/player.frames>=obstacles_above[i].y&&player.x-widthsprite/player.numberOfFrames<=obstacles_above[i].x+obstacles_above[i].width)
+		 if(player.x+widthsprite/player.numberOfFrames>=obstacles_above[i].x&&player.y+heightsprite/player.frames>=obstacles_above[i].y&&player.x<=obstacles_above[i].x+obstacles_above[i].width)
 			{
 				no_lives--;
 				obstacles_above=[];
