@@ -38,7 +38,7 @@ var bg_sound = new Audio("sounds/bg.wav");
 var obstacles = [];
 var pw = 30; //pavementWidth
 var ph = 22;  //pavementHeight
-var widthsprite = 95;
+var widthsprite = 95*2;
 var heightsprite = 78;
 for(u=0;u<5;u++)
 {
@@ -67,6 +67,7 @@ function create_player(options)
 			frameIndex = 0,
 			tickCount = 0,
 			f=0,
+			ha=0;
 			ticksPerFrame = options.ticksPerFrame || 0,
 			numberOfFrames = options.numberOfFrames || 1;
 			xyz.numberOfFrames = options.numberOfFrames;
@@ -88,21 +89,20 @@ function create_player(options)
 	            if (tickCount > ticksPerFrame) 
 	            {
 					tickCount = 0;
-	                if (frameIndex < numberOfFrames - 1) 
-	                {	
-	                    frameIndex += 1;
-	                } 
-	                else 
-	                {
-	                    frameIndex = 0;
-	                    f++;
-	                    if(f>=xyz.frames) 
-	                    	{
-	                    		f=0;
-	                    	}
-	                }
+	                if(frameIndex==0 || frameIndex==1 || frameIndex==2)
+	                	frameIndex=3;
+	                else if(frameIndex==3 && ha==0)
+	                	{frameIndex=1;ha=1;}
+	                else if(frameIndex==3 && ha==1)
+	                	{frameIndex=0;ha=0;}
+	                if(xyz.JUMP_ACTIVATE==1)
+           			{
+           				frameIndex=2;
+           			}
 	                       
            		}
+           		
+
         	};
 
         	xyz.jump = function() 
@@ -154,7 +154,7 @@ player = create_player({
 		width: widthsprite,
 		height: heightsprite,
 		image:	buyer,
-		numberOfFrames: 2,
+		numberOfFrames: 4,
 		frames: 1,
 		ticksPerFrame: 15,
 		x: wallspace+20,
@@ -167,10 +167,10 @@ player1 = create_player({
 		width: widthsprite,
 		height: heightsprite,
 		image:	thief,
-		numberOfFrames: 2,
+		numberOfFrames: 4,
 		frames: 1,
 		ticksPerFrame: 15,
-		x: cw-wallspace-widthsprite/2-20,
+		x: cw-wallspace-widthsprite/4-20,
 		y: ch-heightsprite-ph,
 		ini: ch-ph-heightsprite
 });
