@@ -441,12 +441,12 @@ function try_again(str)
 	//but = document.createElement("button");
 	//but.innerHTML = "share";
 	//but.onClick = function(){
-			(function(){	FB.ui({
+		FB.ui({
 		  method: 'share',
 		  name: "I got ! Which European are you destined to date?",
 		  link: "http://www.festember.com/",
 		  
-		  description: "I scored " + score + ". Can you beat this?"}); })();
+		  description: "I scored " + score + ". Can you beat this?"});
 	//};
 
 	document.body.appendChild(divtag);
