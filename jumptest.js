@@ -95,7 +95,7 @@ function create_player(options)
 	                	{frameIndex=1;ha=1;}
 	                else if(frameIndex==3 && ha==1)
 	                	{frameIndex=0;ha=0;}
-	                if(xyz.JUMP_ACTIVATE==1)
+	                if(player.JUMP_ACTIVATE==1)
            			{
            				frameIndex=2;
            			}
@@ -109,7 +109,7 @@ function create_player(options)
         	{
 				if(this.t==0)
 					jump_sound.play();
-				if(this.t==120)
+				if(this.t==110)
 				{
 					this.t=0;
 				}
@@ -170,7 +170,7 @@ player1 = create_player({
 		numberOfFrames: 4,
 		frames: 1,
 		ticksPerFrame: 15,
-		x: cw-wallspace-widthsprite/4-20,
+		x: cw-wallspace-widthsprite/2-20,
 		y: ch-heightsprite-ph,
 		ini: ch-ph-heightsprite
 });
@@ -270,7 +270,7 @@ function make_obstacle()
 		
 		if(obstacles_above[0].x+obstacles_above[0].width<=player.x&&s==0) 
 		{
-			score+=10;
+			score++;
 			a1++;
 			s=1;
 		}
@@ -293,7 +293,7 @@ function make_obstacle()
 
 		if(obstacles_below[0].x>=player1.x+player1.width&&s==0)
 		{
-			score+=10;
+			score++;
 			a2++;
 			s=1;
 		}
@@ -317,7 +317,7 @@ function check_collision()
 	for(i=0;i<obstacles_above.length;i++)
 	 	{
 
-		 if(player.x+widthsprite/player.numberOfFrames>=obstacles_above[i].x&&player.y+heightsprite/player.frames>=obstacles_above[i].y&&player.x<=obstacles_above[i].x+obstacles_above[i].width)
+		 if(player.x+widthsprite/player.numberOfFrames>=obstacles_above[i].x&&player.y+heightsprite/player.frames>=obstacles_above[i].y&&player.x-widthsprite/player.numberOfFrames<=obstacles_above[i].x+obstacles_above[i].width)
 			{
 				no_lives--;
 				obstacles_above=[];
@@ -424,7 +424,6 @@ function render_background()
 function try_again(str)
 {
 	divtag=document.createElement('div');
-	divtag.id = "again";
 	divtag.style.height=window.innerHeight;
 	divtag.style.width=window.innerWidth;
 	divtag.style.backgroundColor="black";
@@ -436,22 +435,19 @@ function try_again(str)
 	divtag.style.color = "white";
 	divtag.style.fontFamily = "Comic Sans MS";
 	divtag.align = "center";
-
-	divtag.innerHTML = "Your score is:" + score + "<br>" + str + "<br> Press SPACEBAR to continue<br>";
-	//but = document.createElement("button");
-	//but.innerHTML = "share";
-	//but.onClick = function(){
-			(function(){	FB.ui({
-		  method: 'share',
-		  name: "I got ! Which European are you destined to date?",
-		  link: "http://www.festember.com/",
+	divtag.innerHTML = "Your score is:" + score + "<br>" + str + "<br> Press SPACEBAR to continue";
+	// button = document.createElement("button");
+	// divtag.appendChild(button);
+	// button.onClick = function(){
+	// 			FB.ui({
+	// 	  method: 'share',
+	// 	  name: "I got ! Which European are you destined to date?",
+	// 	  link: "http://www.festember.com/",
 		  
-		  description: "I scored " + score + ". Can you beat this?"}); })();
-	//};
+	// 	  description: "fhdfh"});
+	// }
 
 	document.body.appendChild(divtag);
-
-	//document.getElementById("again").appendChild(but);
 }
 
 //bg_sound.play();
@@ -465,7 +461,7 @@ if(bg == 1) {
 		
 function start_Game() {
 
-	ga('send', 'pageview');
+	
 	if(GAME_OVER!=1&&no_lives!=0) {
 			requestAnimationFrame(start_Game);
 			// bg_sound.play();
