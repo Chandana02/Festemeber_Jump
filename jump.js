@@ -443,7 +443,7 @@ function try_again(str)
 	//but.onClick = function(){
 		FB.ui({
 		  method: 'share',
-		  name: "I got ! Which European are you destined to date?",
+		  name: "Just Jump",
 		  link: "http://www.festember.com/",
 		  
 		  description: "I scored " + score + ". Can you beat this?"});
