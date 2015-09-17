@@ -34,7 +34,7 @@ var lives = [], life, no_lives=4, life_loss = 0;
 var BUFFER_OBSTACLE_SPACE = cw/4;
 var jump_sound = new Audio("sounds/CanonShoot.wav");
 var collision_sound = new Audio("sounds/explosion.wav");
-var bg_sound = new Audio("sounds/bg.wav");
+//var bg_sound = new Audio("sounds/bg.wav");
 var obstacles = [];
 var pw = 30; //pavementWidth
 var ph = 22;  //pavementHeight
@@ -106,21 +106,6 @@ function create_player(options)
            			//console.log(xyz.frameIndex);
 
 	            	}	
-	            	/*else 
-	            	{
-	            		//console.log(frameIndex);
-	            		if(xyz.frameIndex==3 || xyz.frameIndex==2 || xyz.frameIndex==1)
-	                	xyz.frameIndex=0;
-	                else if(xyz.frameIndex==0 && f==0)
-	                	{xyz.frameIndex=2;f=1;}
-	                else if(xyz.frameIndex==0 && f==1)
-	                	{xyz.frameIndex=3;f=0;}
-	                if(xyz.JUMP_ACTIVATE==1)
-           			{
-           				xyz.frameIndex=1;
-           			}
-           		//	console.log(xyz.frameIndex);
-	            	}*/	
 	                
 	                       
            		}
@@ -157,17 +142,6 @@ function create_player(options)
 		
 			xyz.render = function () 
 			{
-				// xyz.context.save();
-			 //  	xyz.context.fillStyle = 'rgba(0,0,0,.6)';
-			 //  	xyz.context.fillRect(xyz.x,xyz.y, xyz.width / xyz.numberOfFrames, xyz.height);
-			 //  	xyz.context.restore();
-
-				// xyz.context.save();
-			 //  	xyz.context.translate(xyz.x, xyz.y);
-			 //  	if(xyz.playerindex == 1) {
-			 //    	xyz.context.scale(-1,1);
-			 //    	xyz.context.translate(-xyz.width/xyz.numberOfFrames,0);
-			 //  	}
 			  	xyz.context.drawImage(
 			    xyz.image,											//img source
 			    xyz.frameIndex * (xyz.width / numberOfFrames),			//sx
@@ -359,6 +333,7 @@ function check_collision()
 		 	player.x<=obstacles_above[i].x+obstacles_above[i].width)
 			{
 				no_lives--;
+				life_lost();
 				obstacles_above=[];
 				obstacles_below=[];
 			}
@@ -370,11 +345,8 @@ function check_collision()
 				player1.y+heightsprite/player1.frames>=obstacles_below[ji].y &&
 				player1.x+widthsprite/player1.numberOfFrames>=obstacles_below[ji].x)
 			{
-				var _ = player1.x<=obstacles_below[ji].x+obstacles_below[ji].width,
-					__ = player1.y+heightsprite/player1.frames>=obstacles_below[ji].y,
-					___ = player1.x+widthsprite/player1.numberOfFrames>=obstacles_below[ji].x
-				//alert("Dead!" + _ + __ + ___);
 				no_lives--;
+				life_lost();
 				obstacles_below=[];
 				obstacles_above=[];
 			}
@@ -424,11 +396,6 @@ function check_no_lives() {
 	if(no_lives==0) {
 		GAME_OVER = 1;
 		try_again("Sorry! You lost! Better luck next time :P");
-
-		window.onkeydown = function (e) {
-			if(e.keyCode == 32)
-				location.reload();
-		}
 	}
 }
 
@@ -458,8 +425,10 @@ function render_background()
 
     ctx.drawImage(bg1, 0, 0, bg1.width, bg1.height, wallspace + vsx1, ch/2, bg1.width, bg1.height);
     ctx.drawImage(bg1, 0, 0, bg1.width, bg1.height, wallspace + vsx1 + bg1.width, ch/2, bg1.width, bg1.height);
+    try{
     ctx.drawImage(bg1, bg1.width - vsx1, 0, vsx1 , bg1.height, wallspace, ch/2, vsx1, bg1.height);
-   
+    	}
+    	catch(e) {}
     vsx1 += 2;
     if(vsx1 >= bg1.width) {
         vsx1 = 0;
@@ -482,37 +451,32 @@ function try_again(str)
 	divtag.style.fontFamily = "Comic Sans MS";
 	divtag.align = "center";
 	divtag.innerHTML = "Your score is:" + score + "<br>" + str + "<br> Press SPACEBAR to continue<br>";
-	document.body.appendChild(divtag);
-	share = document.createElement('img');
-	share.src = 'images/facebookshare.jpeg';
-	share.width = 70;
-	share.height = 20;
-	share.onclick = FBShareOp();/*function() {
-		FB.ui({
-		  method: 'share',
-		  name: "Just Jump",
-		  link: "http://games.festember.com/just-jump/",
-		  
-		  description: "I scored " + score + ". Can you beat this?"});
-};
-document.getElementById("again").appendChild(share);
-
-	/*like = document.createElement('img');
-	like.src = 'images/like.jpeg';
-	like.width = 70;
-	like.height = 20;
-	like.onclick = function() {
-		FB.ui({
-		  method: 'like',
-		  name: "Just Jump",
-		  link: "http://games.festember.com/just-jump/",
-		  
-		  description: "I scored " + score + ". Can you beat this?"});
-};
-document.getElementById("again").appendChild(like);*/
-
-	//document.getElementById("again").appendChild(but);
+	if(str == "You win! Wanna play again?") {
+		divtag.style.backgroundColor = "green";
+		// onethief = document.createElement('img');
+		// onethief.src = "images/onethief.png";
+		// onethief.style.position = "absolute";
+		// onethief.style.left = '0px';
+		// onethief.style.bottom = '50px';
+		// onethief.style.zIndex = 100;
+		// document.getElementById('again').appendChild(onethief);
 }
+	document.body.appendChild(divtag);
+
+	window.onkeydown = function (e) {
+				if(e.keyCode == 32)
+				{
+				GAME_OVER=0;
+				document.body.removeChild(divtag);
+				player.x = wallspace+20;
+				player1.x = cw-wallspace-widthsprite/4-20;
+				no_lives = 4;
+				score = 0;
+				start_Game();
+				}
+				}
+}
+		
 
 function FBShareOp(){
 	var product_name   = 	'just jump';
@@ -545,6 +509,35 @@ function FBShareOp(){
     });
 }
 
+function life_lost() {
+	GAME_OVER=1;
+	if(no_lives!=0)
+	{
+	lost=document.createElement('div');
+	lost.id = "again";
+	lost.style.height=window.innerHeight;
+	lost.style.width=window.innerWidth;
+	lost.style.backgroundColor="red";
+	lost.style.opacity="0.8";
+	lost.style.position = "absolute";
+	lost.style.left = "0px";
+	lost.style.top = "0px";
+	lost.style.fontSize = "40px";
+	lost.style.color = "white";
+	lost.style.fontFamily = "Comic Sans MS";
+	lost.align = "center";
+	lost.innerHTML = "You lost a life! <br> Press SPACEBAR to continue<br>";
+	document.body.appendChild(lost);
+				 window.onkeydown = function (e) {
+				if(e.keyCode == 32)
+				{
+				GAME_OVER=0;
+				document.body.removeChild(lost);
+				start_Game();
+				}
+				}
+			}
+}
 
 //bg_sound.play();
 bg = 1;
@@ -562,6 +555,7 @@ function start_Game() {
 			requestAnimationFrame(start_Game);
 			// bg_sound.play();
 			bg = 1;
+			checkkey();
 			ctx.clearRect(0,0,cw,ch);
 			render_background();
 			render_pavement();
@@ -586,16 +580,12 @@ function start_Game() {
 			if(player.x>=player1.x) {
 				GAME_OVER = 1;
 				try_again("You win! Wanna play again?");
-				 window.onkeydown = function (e) {
-				if(e.keyCode == 32)
-				location.reload();
-				}
-
 			}
 	}
 }
 
-
+function checkkey()
+{
 window.onkeydown = function(event) 
 {
 	e=event.keyCode;
@@ -618,5 +608,4 @@ window.onkeydown = function(event)
 		}
 	}
 }
-
-
+}
