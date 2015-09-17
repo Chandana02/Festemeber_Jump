@@ -487,7 +487,7 @@ function try_again(str)
 	share.src = 'images/facebookshare.jpeg';
 	share.width = 70;
 	share.height = 20;
-	share.onclick = function() {
+	share.onclick = FBShareOp();/*function() {
 		FB.ui({
 		  method: 'share',
 		  name: "Just Jump",
@@ -497,7 +497,7 @@ function try_again(str)
 };
 document.getElementById("again").appendChild(share);
 
-	like = document.createElement('img');
+	/*like = document.createElement('img');
 	like.src = 'images/like.jpeg';
 	like.width = 70;
 	like.height = 20;
@@ -509,10 +509,42 @@ document.getElementById("again").appendChild(share);
 		  
 		  description: "I scored " + score + ". Can you beat this?"});
 };
-document.getElementById("again").appendChild(like);
+document.getElementById("again").appendChild(like);*/
 
 	//document.getElementById("again").appendChild(but);
 }
+
+function FBShareOp(){
+	var product_name   = 	'just jump';
+	var description	   =	"I scored " + score + ". Can you beat this?";
+	var share_image	   =	"images/indexth.jpg";
+	var share_url	   =	'http://games.festember.com/just-jump';	
+	FB.ui({
+        method: 'share',
+        href: 'http://games.festember.com/just-jump',
+        name: product_name,
+        link: share_url,
+        //picture: share_image,
+        caption: 'Hey!',
+        description: description        
+    }, function(response) {
+        if(response && response.post_id){}
+        else{}
+    });
+    FB.ui({
+        method: 'like',
+        href: 'http://games.festember.com/just-jump',
+        name: product_name,
+        link: share_url,
+        //picture: share_image,
+        caption: 'Hey!',
+        description: description        
+    }, function(response) {
+        if(response && response.post_id){}
+        else{}
+    });
+}
+
 
 //bg_sound.play();
 bg = 1;
