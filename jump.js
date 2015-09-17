@@ -47,7 +47,7 @@ for(u=0;u<5;u++)
 }
 
 var thief = new Image();
-thief.src = "images/thief.png";
+thief.src = "images/b2_190x78.png";
 var buyer = new Image();
 buyer.src = "images/thief.png";
 
@@ -64,13 +64,14 @@ l = new line(cw-2*wallspace, 10, "blue");
 function create_player(options)
 {
 	var xyz = {},
-			frameIndex = 0,
+			//frameIndex = 0,
 			tickCount = 0,
 			f=0,
 			ha=0;
 			ticksPerFrame = options.ticksPerFrame || 0,
 			numberOfFrames = options.numberOfFrames || 1;
 			xyz.numberOfFrames = options.numberOfFrames;
+			xyz.frameIndex = 0;
 			xyz.context = options.context;
 			xyz.width = options.width;
 			xyz.height = options.height;
@@ -82,23 +83,45 @@ function create_player(options)
 			xyz.JUMP_ACTIVATE = 0;
 			xyz.t=0;
 			xyz.v=8;
-
+			xyz.playerindex = options.playerindex; 
 			xyz.update = function() 
 			{
 	            tickCount += 1;
 	            if (tickCount > ticksPerFrame) 
 	            {
+	            	//console.log(frameIndex);
 					tickCount = 0;
-	                if(frameIndex==0 || frameIndex==1 || frameIndex==2)
-	                	frameIndex=3;
-	                else if(frameIndex==3 && ha==0)
-	                	{frameIndex=1;ha=1;}
-	                else if(frameIndex==3 && ha==1)
-	                	{frameIndex=0;ha=0;}
+	                //if(xyz.playerindex==0)
+	                {
+	                if(xyz.frameIndex==0 || xyz.frameIndex==1 || xyz.frameIndex==2)
+	                	xyz.frameIndex=3;
+	                else if(xyz.frameIndex==3 && ha==0)
+	                	{xyz.frameIndex=1;ha=1;}
+	                else if(xyz.frameIndex==3 && ha==1)
+	                	{xyz.frameIndex=0;ha=0;}
 	                if(xyz.JUMP_ACTIVATE==1)
            			{
-           				frameIndex=2;
+           				xyz.frameIndex=2;
            			}
+           			//console.log(xyz.frameIndex);
+
+	            	}	
+	            	/*else 
+	            	{
+	            		//console.log(frameIndex);
+	            		if(xyz.frameIndex==3 || xyz.frameIndex==2 || xyz.frameIndex==1)
+	                	xyz.frameIndex=0;
+	                else if(xyz.frameIndex==0 && f==0)
+	                	{xyz.frameIndex=2;f=1;}
+	                else if(xyz.frameIndex==0 && f==1)
+	                	{xyz.frameIndex=3;f=0;}
+	                if(xyz.JUMP_ACTIVATE==1)
+           			{
+           				xyz.frameIndex=1;
+           			}
+           		//	console.log(xyz.frameIndex);
+	            	}*/	
+	                
 	                       
            		}
            		
@@ -134,16 +157,28 @@ function create_player(options)
 		
 			xyz.render = function () 
 			{
+				// xyz.context.save();
+			 //  	xyz.context.fillStyle = 'rgba(0,0,0,.6)';
+			 //  	xyz.context.fillRect(xyz.x,xyz.y, xyz.width / xyz.numberOfFrames, xyz.height);
+			 //  	xyz.context.restore();
+
+				// xyz.context.save();
+			 //  	xyz.context.translate(xyz.x, xyz.y);
+			 //  	if(xyz.playerindex == 1) {
+			 //    	xyz.context.scale(-1,1);
+			 //    	xyz.context.translate(-xyz.width/xyz.numberOfFrames,0);
+			 //  	}
 			  	xyz.context.drawImage(
 			    xyz.image,											//img source
-			    frameIndex * (xyz.width / numberOfFrames),			//sx
+			    xyz.frameIndex * (xyz.width / numberOfFrames),			//sx
 			    f*xyz.height/xyz.frames,									//sy
 			    xyz.width / numberOfFrames,						//sw
 			    xyz.height / xyz.frames,									//sh
 			    xyz.x,												//wx
 			    xyz.y,													//wy
 			    xyz.width / numberOfFrames,						//ww
-			    xyz.height/xyz.frames);										//wh
+			    xyz.height/xyz.frames);
+			    //xyz.context.restore();										//wh
 			};
 		
 		return xyz;
@@ -159,7 +194,8 @@ player = create_player({
 		ticksPerFrame: 15,
 		x: wallspace+20,
 		y: ch/2-heightsprite-ph,
-		ini: ch/2-ph-heightsprite
+		ini: ch/2-ph-heightsprite,
+		playerindex:0
 });
 
 player1 = create_player({
@@ -172,7 +208,8 @@ player1 = create_player({
 		ticksPerFrame: 15,
 		x: cw-wallspace-widthsprite/4-20,
 		y: ch-heightsprite-ph,
-		ini: ch-ph-heightsprite
+		ini: ch-ph-heightsprite,
+		playerindex:1
 });
 
 
@@ -317,7 +354,9 @@ function check_collision()
 	for(i=0;i<obstacles_above.length;i++)
 	 	{
 
-		 if(player.x+widthsprite/player.numberOfFrames>=obstacles_above[i].x&&player.y+heightsprite/player.frames>=obstacles_above[i].y&&player.x<=obstacles_above[i].x+obstacles_above[i].width)
+		 if(player.x+widthsprite/player.numberOfFrames>=obstacles_above[i].x &&
+		 	player.y+heightsprite/player.frames>=obstacles_above[i].y &&
+		 	player.x<=obstacles_above[i].x+obstacles_above[i].width)
 			{
 				no_lives--;
 				obstacles_above=[];
@@ -327,8 +366,14 @@ function check_collision()
 		
 		for(ji=0;ji<obstacles_below.length;ji++)
 		{
-			if(player1.x<=obstacles_below[ji].x+obstacles_below[ji].width&&player1.y+heightsprite/player1.frames>=obstacles_below[ji].y&&player1.x+widthsprite/player1.numberOfFrames>=obstacles_below[ji].x)
+			if(player1.x<=obstacles_below[ji].x+obstacles_below[ji].width &&
+				player1.y+heightsprite/player1.frames>=obstacles_below[ji].y &&
+				player1.x+widthsprite/player1.numberOfFrames>=obstacles_below[ji].x)
 			{
+				var _ = player1.x<=obstacles_below[ji].x+obstacles_below[ji].width,
+					__ = player1.y+heightsprite/player1.frames>=obstacles_below[ji].y,
+					___ = player1.x+widthsprite/player1.numberOfFrames>=obstacles_below[ji].x
+				//alert("Dead!" + _ + __ + ___);
 				no_lives--;
 				obstacles_below=[];
 				obstacles_above=[];
@@ -436,20 +481,35 @@ function try_again(str)
 	divtag.style.color = "white";
 	divtag.style.fontFamily = "Comic Sans MS";
 	divtag.align = "center";
-
 	divtag.innerHTML = "Your score is:" + score + "<br>" + str + "<br> Press SPACEBAR to continue<br>";
-	//but = document.createElement("button");
-	//but.innerHTML = "share";
-	//but.onClick = function(){
+	document.body.appendChild(divtag);
+	share = document.createElement('img');
+	share.src = 'images/facebookshare.jpeg';
+	share.width = 70;
+	share.height = 20;
+	share.onclick = function() {
 		FB.ui({
 		  method: 'share',
 		  name: "Just Jump",
-		  link: "http://www.festember.com/",
+		  link: "http://games.festember.com/just-jump/",
 		  
 		  description: "I scored " + score + ". Can you beat this?"});
-	//};
+};
+document.getElementById("again").appendChild(share);
 
-	document.body.appendChild(divtag);
+	like = document.createElement('img');
+	like.src = 'images/like.jpeg';
+	like.width = 70;
+	like.height = 20;
+	like.onclick = function() {
+		FB.ui({
+		  method: 'like',
+		  name: "Just Jump",
+		  link: "http://games.festember.com/just-jump/",
+		  
+		  description: "I scored " + score + ". Can you beat this?"});
+};
+document.getElementById("again").appendChild(like);
 
 	//document.getElementById("again").appendChild(but);
 }
@@ -464,8 +524,8 @@ if(bg == 1) {
 
 		
 function start_Game() {
-
-	ga('send', 'pageview');
+//ga('send', 'pageview');
+	
 	if(GAME_OVER!=1&&no_lives!=0) {
 			requestAnimationFrame(start_Game);
 			// bg_sound.play();
